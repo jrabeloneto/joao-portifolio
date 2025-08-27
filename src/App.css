@@ -125,6 +125,11 @@
   }
   body {
     @apply bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+  }
+  html {
+    scroll-behavior: smooth;
   }
 }
 
@@ -156,6 +161,8 @@
 
 .section-padding {
   padding: 5rem 1rem;
+  min-height: auto;
+  width: 100%;
 }
 
 @media (max-width: 768px) {
@@ -190,6 +197,37 @@
 
 .nav-link:hover {
   color: var(--navy-blue-light);
+}
+
+/* Fix for section visibility */
+section {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  min-height: auto;
+  width: 100%;
+}
+
+.hero-section {
+  min-height: 100vh;
+  display: flex !important;
+  align-items: center;
+}
+
+.about-section,
+.projects-section,
+.contact-section {
+  display: block !important;
+  padding: 5rem 0;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .about-section,
+  .projects-section,
+  .contact-section {
+    padding: 3rem 0;
+  }
 }
 
 .nav-link::after {
