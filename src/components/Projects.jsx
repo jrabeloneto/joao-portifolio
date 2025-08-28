@@ -14,7 +14,7 @@ export default function Projects() {
       image: techstoreMockup,
       tags: ["React", "Vite", "Tailwind CSS", "Context API", "E-commerce"],
       github: "https://github.com/jrabeloneto/techstore-ecommerce",
-      demo: "https://8080-ik9vvwriqfafryqem8gct-46d154ef.manusvm.computer",
+      demo: "https://github.com/jrabeloneto/techstore-ecommerce",
       type: "featured",
       features: [
         "Carrinho de compras funcional",
