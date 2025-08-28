@@ -3,6 +3,7 @@ import { ExternalLink, Github, Smartphone, Code, Palette } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import bradescoMockup from '../assets/bradesco-mockup.png';
+import techstoreMockup from '../assets/techstore-mockup.png';
 
 export default function Projects() {
   const projects = [
@@ -10,7 +11,7 @@ export default function Projects() {
       id: 1,
       title: "TechStore E-commerce",
       description: "E-commerce moderno desenvolvido em React com carrinho de compras, autenticação e design responsivo. Sistema completo com 12 produtos, filtros avançados e interface mobile-first.",
-      image: bradescoMockup,
+      image: techstoreMockup,
       tags: ["React", "Vite", "Tailwind CSS", "Context API", "E-commerce"],
       github: "https://github.com/jrabeloneto/techstore-ecommerce",
       demo: "https://techstore-ecommerce.vercel.app",
