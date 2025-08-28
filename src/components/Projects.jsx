@@ -8,13 +8,31 @@ export default function Projects() {
   const projects = [
     {
       id: 1,
+      title: "TechStore E-commerce",
+      description: "E-commerce moderno desenvolvido em React com carrinho de compras, autenticação e design responsivo. Sistema completo com 12 produtos, filtros avançados e interface mobile-first.",
+      image: bradescoMockup,
+      tags: ["React", "Vite", "Tailwind CSS", "Context API", "E-commerce"],
+      github: "https://github.com/jrabeloneto/techstore-ecommerce",
+      demo: "https://techstore-ecommerce.vercel.app",
+      type: "featured",
+      features: [
+        "Carrinho de compras funcional",
+        "Sistema de autenticação",
+        "12 produtos com filtros avançados",
+        "Design responsivo mobile-first",
+        "Persistência no localStorage"
+      ],
+      icon: <Code className="w-6 h-6" />
+    },
+    {
+      id: 2,
       title: "Bradesco App Redesign",
       description: "Redesign completo do aplicativo mobile Bradesco com foco em UX/UI moderno e desenvolvimento frontend responsivo. Projeto desenvolvido em React com Tailwind CSS.",
       image: bradescoMockup,
       tags: ["React", "Tailwind CSS", "UX/UI", "Mobile-First", "JavaScript"],
       github: "https://github.com/jrabeloneto/bradesco-app-redesign",
       demo: "#",
-      type: "featured",
+      type: "current",
       features: [
         "Interface moderna e intuitiva",
         "Design system completo",
@@ -25,25 +43,14 @@ export default function Projects() {
       icon: <Smartphone className="w-6 h-6" />
     },
     {
-      id: 2,
+      id: 3,
       title: "Portfolio Pessoal",
       description: "Site portfolio pessoal desenvolvido em React com animações suaves e design responsivo. Showcase completo de projetos e competências.",
       image: "/api/placeholder/600/400",
       tags: ["React", "Framer Motion", "Tailwind CSS", "Responsive"],
-      github: "https://github.com/jrabeloneto/joao-portfolio",
-      demo: "#",
+      github: "https://github.com/jrabeloneto/joao-repositorio",
+      demo: "https://joao-repositorio.vercel.app",
       type: "current",
-      icon: <Code className="w-6 h-6" />
-    },
-    {
-      id: 3,
-      title: "Projetos Futuros",
-      description: "Em desenvolvimento: E-commerce moderno, Dashboard Analytics e Sistema de Gestão. Projetos focados em demonstrar competências avançadas.",
-      image: "/api/placeholder/600/400",
-      tags: ["React", "Next.js", "TypeScript", "Node.js"],
-      github: "#",
-      demo: "#",
-      type: "upcoming",
       icon: <Palette className="w-6 h-6" />
     }
   ];
