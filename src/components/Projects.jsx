@@ -14,7 +14,7 @@ export default function Projects() {
       image: techstoreMockup,
       tags: ["React", "Vite", "Tailwind CSS", "Mobile-First", "Modern UI"],
       github: "https://github.com/jrabeloneto/techstore-v2",
-      demo: "https://github.com/jrabeloneto/techstore-v2",
+      demo: "https://techstore-v2.vercel.app",
       type: "featured",
       features: [
         "Layout mobile-first responsivo",
