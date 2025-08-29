@@ -9,19 +9,19 @@ export default function Projects() {
   const projects = [
     {
       id: 1,
-      title: "TechStore E-commerce",
-      description: "E-commerce moderno desenvolvido em React com carrinho de compras, autenticação e design responsivo. Sistema completo com 12 produtos, filtros avançados e interface mobile-first.",
+      title: "TechStore V2 - E-commerce",
+      description: "E-commerce responsivo desenvolvido em React com design mobile-first, sistema de carrinho funcional e interface moderna com gradientes. Projeto completamente reestruturado com foco em performance e usabilidade.",
       image: techstoreMockup,
-      tags: ["React", "Vite", "Tailwind CSS", "Context API", "E-commerce"],
-      github: "https://github.com/jrabeloneto/techstore-ecommerce",
-      demo: "https://github.com/jrabeloneto/techstore-ecommerce",
+      tags: ["React", "Vite", "Tailwind CSS", "Mobile-First", "Modern UI"],
+      github: "https://github.com/jrabeloneto/techstore-v2",
+      demo: "https://github.com/jrabeloneto/techstore-v2",
       type: "featured",
       features: [
-        "Carrinho de compras funcional",
-        "Sistema de autenticação",
-        "12 produtos com filtros avançados",
-        "Design responsivo mobile-first",
-        "Persistência no localStorage"
+        "Layout mobile-first responsivo",
+        "Sistema de carrinho com contador dinâmico",
+        "6 produtos de tecnologia premium",
+        "Design moderno com gradientes",
+        "Performance otimizada"
       ],
       icon: <Code className="w-6 h-6" />
     },
