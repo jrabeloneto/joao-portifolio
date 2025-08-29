@@ -3,7 +3,7 @@ import { ExternalLink, Github, Smartphone, Code, Palette } from 'lucide-react';
 import { Card, CardContent } from './ui/card';
 import { Button } from './ui/button';
 import bradescoMockup from '../assets/bradesco-mockup.png';
-import techstoreMockup from '../assets/techstore-v2-mockup.png';
+import techstoreMockup from '../assets/techstore-v2-preview.webp';
 
 export default function Projects() {
   const projects = [
