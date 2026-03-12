@@ -60,7 +60,7 @@ function ProjectMock({ content, bg, accent }) {
   if (content === 'portfolio') {
     return (
       <div style={{ width: '100%', height: '100%', background: bg, padding: '18px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', gap: '5px', marginBottom: '14px' }}>
+        <div style={{ display: 'flex', gap: '5px', marginBottom: '14px', marginTop: '28px' }}>
           {['#ff5f57', '#febc2e', '#28c840'].map(c => (
             <div key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c }} />
           ))}
@@ -83,7 +83,7 @@ function ProjectMock({ content, bg, accent }) {
   if (content === 'bradesco') {
     return (
       <div style={{ width: '100%', height: '100%', background: bg, padding: '18px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', gap: '5px', marginBottom: '14px' }}>
+        <div style={{ display: 'flex', gap: '5px', marginBottom: '14px', marginTop: '28px' }}>
           {['#ff5f57', '#febc2e', '#28c840'].map(c => (
             <div key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c }} />
           ))}
@@ -104,7 +104,7 @@ function ProjectMock({ content, bg, accent }) {
   if (content === 'techstore') {
     return (
       <div style={{ width: '100%', height: '100%', background: bg, padding: '18px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', gap: '5px', marginBottom: '14px' }}>
+        <div style={{ display: 'flex', gap: '5px', marginBottom: '14px', marginTop: '28px' }}>
           {['#ff5f57', '#febc2e', '#28c840'].map(c => (
             <div key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c }} />
           ))}
@@ -127,7 +127,7 @@ function ProjectMock({ content, bg, accent }) {
   if (content === 'teamflow') {
     return (
       <div style={{ width: '100%', height: '100%', background: bg, padding: '18px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-        <div style={{ display: 'flex', gap: '5px', marginBottom: '14px' }}>
+        <div style={{ display: 'flex', gap: '5px', marginBottom: '14px', marginTop: '28px' }}>
           {['#ff5f57', '#febc2e', '#28c840'].map(c => (
             <div key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c }} />
           ))}
@@ -225,6 +225,8 @@ function ProjectCard({ project, index }) {
             color: project.accent,
             letterSpacing: '0.06em',
             textTransform: 'uppercase',
+            zIndex: 10,
+            backdropFilter: 'blur(8px)',
           }}>
             {project.category}
           </div>
