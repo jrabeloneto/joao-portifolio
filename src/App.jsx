@@ -27,7 +27,7 @@ export default function App() {
           width: '700px',
           height: '700px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(245,158,11,0.06) 0%, transparent 65%)',
+          background: 'radial-gradient(circle, rgba(59,130,246,0.06) 0%, transparent 65%)',
           transform: `translate(${cursorPos.x - 350}px, ${cursorPos.y - 350}px)`,
           zIndex: 0,
           transition: 'transform 0.12s ease-out',
@@ -36,7 +36,7 @@ export default function App() {
       <div style={{
         position: 'fixed',
         inset: 0,
-        backgroundImage: `linear-gradient(rgba(245,158,11,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(245,158,11,0.02) 1px, transparent 1px)`,
+        backgroundImage: `linear-gradient(rgba(59,130,246,0.025) 1px, transparent 1px), linear-gradient(90deg, rgba(59,130,246,0.025) 1px, transparent 1px)`,
         backgroundSize: '80px 80px',
         zIndex: 0,
         pointerEvents: 'none',

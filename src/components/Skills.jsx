@@ -2,18 +2,18 @@ import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
 
 const techSkills = [
-  { name: 'JavaScript', level: 85, color: '#f59e0b' },
-  { name: 'TypeScript', level: 72, color: '#f59e0b' },
+  { name: 'JavaScript', level: 85, color: '#3b82f6' },
+  { name: 'TypeScript', level: 72, color: '#3b82f6' },
   { name: 'Java', level: 65, color: '#10b981' },
-  { name: 'HTML5', level: 92, color: '#f59e0b' },
-  { name: 'CSS3', level: 88, color: '#f59e0b' },
+  { name: 'HTML5', level: 92, color: '#3b82f6' },
+  { name: 'CSS3', level: 88, color: '#3b82f6' },
   { name: 'React', level: 82, color: '#10b981' },
   { name: 'Angular', level: 68, color: '#10b981' },
-  { name: 'Tailwind', level: 85, color: '#f59e0b' },
+  { name: 'Tailwind', level: 85, color: '#3b82f6' },
   { name: 'Figma', level: 78, color: '#10b981' },
-  { name: 'Git', level: 82, color: '#f59e0b' },
+  { name: 'Git', level: 82, color: '#3b82f6' },
   { name: 'Scrum', level: 80, color: '#10b981' },
-  { name: 'VS Code', level: 90, color: '#f59e0b' },
+  { name: 'VS Code', level: 90, color: '#3b82f6' },
 ]
 
 const softSkills = [
@@ -28,7 +28,7 @@ const softSkills = [
 ]
 
 const languages = [
-  { name: 'Português', level: 'Nativo', pct: 100, color: '#f59e0b' },
+  { name: 'Português', level: 'Nativo', pct: 100, color: '#3b82f6' },
   { name: 'Inglês', level: 'Avançado (B2+)', pct: 82, color: '#10b981' },
 ]
 
@@ -111,7 +111,7 @@ export default function Skills() {
       {/* Divisor topo */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0, height: '1px',
-        background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.2), transparent)',
+        background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.2), transparent)',
       }} />
 
       <div style={{ maxWidth: '1100px', margin: '0 auto' }}>
@@ -121,11 +121,11 @@ export default function Skills() {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '4px 14px', borderRadius: '9999px',
-              border: '1px solid rgba(245,158,11,0.2)',
-              background: 'rgba(245,158,11,0.06)',
+              border: '1px solid rgba(59,130,246,0.2)',
+              background: 'rgba(59,130,246,0.06)',
               marginBottom: '16px',
             }}>
-              <span style={{ fontSize: '11px', fontWeight: '700', color: '#f59e0b', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '11px', fontWeight: '700', color: '#3b82f6', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                 Competencias
               </span>
             </div>
@@ -134,7 +134,7 @@ export default function Skills() {
               letterSpacing: '-0.03em', color: '#f9fafb', lineHeight: 1.1,
             }}>
               Habilidades <span style={{
-                background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+                background: 'linear-gradient(135deg, #3b82f6, #60a5fa)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
               }}>Tecnicas</span>
             </h2>
@@ -214,7 +214,7 @@ export default function Skills() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.07, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                whileHover={{ x: 4, borderColor: 'rgba(245,158,11,0.25)' }}
+                whileHover={{ x: 4, borderColor: 'rgba(59,130,246,0.25)' }}
                 style={{
                   display: 'flex', alignItems: 'center', gap: '12px',
                   padding: '14px 18px',
@@ -225,7 +225,7 @@ export default function Skills() {
                 }}
               >
                 <span style={{
-                  fontSize: '16px', color: i % 2 === 0 ? '#f59e0b' : '#10b981',
+                  fontSize: '16px', color: i % 2 === 0 ? '#3b82f6' : '#10b981',
                   flexShrink: 0,
                 }}>
                   {skill.icon}
@@ -242,7 +242,7 @@ export default function Skills() {
       {/* Divisor base */}
       <div style={{
         position: 'absolute', bottom: 0, left: 0, right: 0, height: '1px',
-        background: 'linear-gradient(90deg, transparent, rgba(245,158,11,0.2), transparent)',
+        background: 'linear-gradient(90deg, transparent, rgba(59,130,246,0.2), transparent)',
       }} />
     </section>
   )

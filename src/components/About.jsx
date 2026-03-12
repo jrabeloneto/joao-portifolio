@@ -7,7 +7,7 @@ const timelineItems = [
     title: 'Mestre Conselheiro Estadual',
     org: 'Ordem DeMolay — GCE-AM',
     desc: 'Liderança estratégica de mais de 1.000 jovens no Amazonas. Planejamento de eventos de grande porte, gestão de equipes multidisciplinares e oratória para grandes audiências.',
-    color: '#f59e0b',
+    color: '#3b82f6',
   },
   {
     period: '2024',
@@ -21,7 +21,7 @@ const timelineItems = [
     title: 'Desenvolvimento de Projetos',
     org: 'GitHub Portfolio',
     desc: 'Criação do portfólio web pessoal, redesign do app Bradesco e plataforma e-commerce TechStore. Aprofundamento em React, Angular, Java e TypeScript.',
-    color: '#f59e0b',
+    color: '#3b82f6',
   },
   {
     period: '2025 — Atual',
@@ -37,7 +37,7 @@ const pillars = [
     icon: '◈',
     title: 'Perfil de Gestor',
     desc: 'Liderança natural com foco em pessoas, estratégia e resultados. Experiência comprovada gerenciando equipes de grande escala.',
-    color: '#f59e0b',
+    color: '#3b82f6',
   },
   {
     icon: '◉',
@@ -49,7 +49,7 @@ const pillars = [
     icon: '◈',
     title: 'Inglês Avançado',
     desc: 'Leitura, escrita e conversação em inglês técnico e cotidiano. Preparado para ambientes internacionais e documentação global.',
-    color: '#f59e0b',
+    color: '#3b82f6',
   },
   {
     icon: '◉',
@@ -84,7 +84,7 @@ export default function About() {
       <div style={{
         position: 'absolute', top: '20%', right: '-5%', width: '350px', height: '350px',
         borderRadius: '50%',
-        background: 'radial-gradient(circle, rgba(245,158,11,0.05) 0%, transparent 70%)',
+        background: 'radial-gradient(circle, rgba(59,130,246,0.05) 0%, transparent 70%)',
         filter: 'blur(40px)', pointerEvents: 'none',
       }} />
 
@@ -95,11 +95,11 @@ export default function About() {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '4px 14px', borderRadius: '9999px',
-              border: '1px solid rgba(245,158,11,0.2)',
-              background: 'rgba(245,158,11,0.06)',
+              border: '1px solid rgba(59,130,246,0.2)',
+              background: 'rgba(59,130,246,0.06)',
               marginBottom: '16px',
             }}>
-              <span style={{ fontSize: '11px', fontWeight: '700', color: '#f59e0b', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '11px', fontWeight: '700', color: '#3b82f6', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                 Quem sou eu
               </span>
             </div>
@@ -108,7 +108,7 @@ export default function About() {
               letterSpacing: '-0.03em', color: '#f9fafb', lineHeight: 1.1,
             }}>
               Sobre <span style={{
-                background: 'linear-gradient(135deg, #f59e0b, #fbbf24)',
+                background: 'linear-gradient(135deg, #3b82f6, #60a5fa)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
               }}>mim</span>
             </h2>
@@ -167,11 +167,11 @@ export default function About() {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: '8px',
               padding: '4px 14px', borderRadius: '9999px',
-              border: '1px solid rgba(245,158,11,0.2)',
-              background: 'rgba(245,158,11,0.06)',
+              border: '1px solid rgba(59,130,246,0.2)',
+              background: 'rgba(59,130,246,0.06)',
               marginBottom: '16px',
             }}>
-              <span style={{ fontSize: '11px', fontWeight: '700', color: '#f59e0b', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+              <span style={{ fontSize: '11px', fontWeight: '700', color: '#3b82f6', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
                 Minha Jornada
               </span>
             </div>
@@ -183,7 +183,7 @@ export default function About() {
           <div style={{
             position: 'absolute', left: '0', top: '8px', bottom: '8px',
             width: '2px',
-            background: 'linear-gradient(to bottom, #f59e0b, #10b981, #f59e0b, #10b981)',
+            background: 'linear-gradient(to bottom, #3b82f6, #10b981, #3b82f6, #10b981)',
             borderRadius: '1px', opacity: 0.3,
           }} />
 

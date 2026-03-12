@@ -16,7 +16,7 @@ export default function Footer() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           <div style={{
             width: '28px', height: '28px',
-            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+            background: 'linear-gradient(135deg, #3b82f6, #2563eb)',
             borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center',
             fontWeight: '900', fontSize: '11px', color: '#080810',
           }}>JR</div>
@@ -35,7 +35,7 @@ export default function Footer() {
               href={link.href}
               target={link.href.startsWith('http') ? '_blank' : undefined}
               rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
-              whileHover={{ color: '#f59e0b' }}
+              whileHover={{ color: '#3b82f6' }}
               style={{
                 fontSize: '13px', color: '#6b7280',
                 textDecoration: 'none', transition: 'color 0.2s',
