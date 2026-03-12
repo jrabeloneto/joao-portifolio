@@ -41,6 +41,19 @@ const projects = [
     mockContent: 'techstore',
     mockBg: 'linear-gradient(135deg, #060d1f 0%, #0b1d38 60%, #112240 100%)',
   },
+  {
+    id: '04',
+    category: 'Full-Stack',
+    title: 'TeamFlow',
+    subtitle: 'Java 17 + Spring Boot 3 + Angular 17 + JWT',
+    desc: 'Sistema completo de gerenciamento de equipes com autenticação JWT, dashboard de métricas, CRUD de equipes e membros, controle de status e paginação. Backend em Java com Spring Boot 3 e Spring Security; frontend em Angular 17 com Standalone Components e Angular Material.',
+    techs: ['Java 17', 'Spring Boot 3', 'Angular 17', 'JWT', 'Spring Security', 'JPA/Hibernate', 'TypeScript'],
+    github: 'https://github.com/jrabeloneto/teamflow',
+    demo: null,
+    accent: '#10b981',
+    mockContent: 'teamflow',
+    mockBg: 'linear-gradient(135deg, #060d1f 0%, #0a1f14 60%, #0d2b1c 100%)',
+  },
 ]
 
 function ProjectMock({ content, bg, accent }) {
@@ -108,6 +121,41 @@ function ProjectMock({ content, bg, accent }) {
             </div>
           ))}
         </div>
+      </div>
+    )
+  }
+  if (content === 'teamflow') {
+    return (
+      <div style={{ width: '100%', height: '100%', background: bg, padding: '18px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', gap: '5px', marginBottom: '14px' }}>
+          {['#ff5f57', '#febc2e', '#28c840'].map(c => (
+            <div key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c }} />
+          ))}
+        </div>
+        {/* Header mock */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+          <div style={{ fontSize: '11px', fontWeight: '800', color: accent, letterSpacing: '0.08em' }}>TEAMFLOW</div>
+          <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: `${accent}30`, border: `1px solid ${accent}50`, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <span style={{ fontSize: '8px', color: accent, fontWeight: '700' }}>JR</span>
+          </div>
+        </div>
+        {/* Stats row */}
+        <div style={{ display: 'flex', gap: '5px', marginBottom: '10px' }}>
+          {[['4', 'Equipes'], ['12', 'Membros'], ['3', 'Ativos']].map(([n, l]) => (
+            <div key={l} style={{ flex: 1, background: `${accent}10`, border: `1px solid ${accent}20`, borderRadius: '6px', padding: '5px', textAlign: 'center' }}>
+              <div style={{ fontSize: '13px', fontWeight: '800', color: accent }}>{n}</div>
+              <div style={{ fontSize: '7px', color: '#64748b' }}>{l}</div>
+            </div>
+          ))}
+        </div>
+        {/* Team list mock */}
+        {[['Backend Team', 'Java', '#10b981'], ['Frontend Squad', 'Angular', '#3b82f6'], ['DevOps', 'Docker', '#10b981']].map(([name, tech, clr]) => (
+          <div key={name} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '5px 7px', background: 'rgba(255,255,255,0.03)', borderRadius: '6px', marginBottom: '4px', border: '1px solid rgba(255,255,255,0.04)' }}>
+            <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: clr, flexShrink: 0 }} />
+            <div style={{ flex: 1, fontSize: '8px', color: '#94a3b8', fontWeight: '600' }}>{name}</div>
+            <span style={{ fontSize: '7px', padding: '1px 5px', background: `${clr}20`, color: clr, borderRadius: '3px' }}>{tech}</span>
+          </div>
+        ))}
       </div>
     )
   }
