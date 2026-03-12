@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
 
 const navItems = [
-  { label: 'Início', href: '#hero' },
+  { label: 'Início', href: '#home' },
   { label: 'Sobre', href: '#about' },
   { label: 'Habilidades', href: '#skills' },
   { label: 'Projetos', href: '#projects' },
@@ -12,165 +11,183 @@ const navItems = [
 
 export default function Navigation() {
   const [scrolled, setScrolled] = useState(false)
-  const [menuOpen, setMenuOpen] = useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const [active, setActive] = useState('Início')
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40)
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    const onScroll = () => setScrolled(window.scrollY > 40)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const scrollTo = (href) => {
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
-    setMenuOpen(false)
+  const handleNav = (item) => {
+    setActive(item.label)
+    setMobileOpen(false)
+    const el = document.querySelector(item.href)
+    if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
 
   return (
-    <motion.nav
-      initial={{ y: -80, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6 }}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        background: scrolled ? 'rgba(15,23,42,0.95)' : 'transparent',
-        backdropFilter: scrolled ? 'blur(12px)' : 'none',
-        borderBottom: scrolled ? '1px solid var(--border)' : 'none',
-        transition: 'all 0.3s ease',
-      }}
-    >
-      <div style={{
-        maxWidth: '1200px',
-        margin: '0 auto',
-        padding: '0 24px',
-        height: '70px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-      }}>
-        {/* Logo */}
-        <motion.a
-          href="#hero"
-          onClick={(e) => { e.preventDefault(); scrollTo('#hero') }}
-          whileHover={{ scale: 1.05 }}
-          style={{
-            fontSize: '22px',
-            fontWeight: 700,
-            color: 'var(--text-primary)',
-            textDecoration: 'none',
-            letterSpacing: '-0.5px',
-          }}
-        >
-          João <span style={{ color: 'var(--accent)' }}>Rabelo</span>
-        </motion.a>
-
-        {/* Desktop Nav */}
-        <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}
-          className="hidden-mobile">
-          {navItems.map((item) => (
-            <motion.a
-              key={item.label}
-              href={item.href}
-              onClick={(e) => { e.preventDefault(); scrollTo(item.href) }}
-              whileHover={{ color: 'var(--accent)' }}
-              style={{
-                color: 'var(--text-secondary)',
-                textDecoration: 'none',
-                fontSize: '15px',
-                fontWeight: 500,
-                transition: 'color 0.2s',
-              }}
-            >
-              {item.label}
-            </motion.a>
-          ))}
-          <motion.button
-            onClick={() => scrollTo('#contact')}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            style={{
-              background: 'var(--accent)',
-              color: 'white',
-              border: 'none',
-              padding: '10px 24px',
-              borderRadius: '8px',
-              fontSize: '14px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              transition: 'background 0.2s',
-            }}
+    <>
+      <motion.nav
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        style={{
+          position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
+          padding: '0 20px',
+          background: scrolled ? 'rgba(8,8,16,0.92)' : 'transparent',
+          backdropFilter: scrolled ? 'blur(20px)' : 'none',
+          borderBottom: scrolled ? '1px solid rgba(245,158,11,0.08)' : 'none',
+          transition: 'all 0.3s ease',
+        }}
+      >
+        <div style={{
+          maxWidth: '1100px', margin: '0 auto',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px',
+        }}>
+          <motion.a
+            href="#home"
+            onClick={(e) => { e.preventDefault(); handleNav(navItems[0]) }}
+            whileHover={{ scale: 1.02 }}
+            style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}
           >
-            Contato
-          </motion.button>
-        </div>
+            <div style={{
+              width: '34px', height: '34px',
+              background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+              borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontWeight: '900', fontSize: '13px', color: '#080810', flexShrink: 0,
+            }}>JR</div>
+            <span style={{ fontWeight: '700', fontSize: '16px', color: '#f9fafb', letterSpacing: '-0.02em' }}>
+              João Rabelo
+            </span>
+          </motion.a>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="show-mobile"
-          style={{
-            background: 'none',
-            border: 'none',
-            color: 'var(--text-primary)',
-            cursor: 'pointer',
-            padding: '8px',
-          }}
-        >
-          {menuOpen ? <X size={24} /> : <Menu size={24} />}
-        </button>
-      </div>
-
-      {/* Mobile Menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            style={{
-              background: 'rgba(15,23,42,0.98)',
-              borderTop: '1px solid var(--border)',
-              padding: '16px 24px 24px',
-            }}
-          >
-            {navItems.map((item, i) => (
-              <motion.a
+          <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }} className="desktop-nav">
+            {navItems.map((item) => (
+              <motion.button
                 key={item.label}
-                href={item.href}
-                onClick={(e) => { e.preventDefault(); scrollTo(item.href) }}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.05 }}
+                onClick={() => handleNav(item)}
+                whileHover={{ scale: 1.02 }}
                 style={{
-                  display: 'block',
-                  padding: '12px 0',
-                  color: 'var(--text-secondary)',
-                  textDecoration: 'none',
-                  fontSize: '16px',
-                  fontWeight: 500,
-                  borderBottom: '1px solid var(--border)',
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  padding: '8px 14px', borderRadius: '8px', fontSize: '14px',
+                  fontWeight: active === item.label ? '600' : '400',
+                  color: active === item.label ? '#f59e0b' : '#9ca3af',
+                  transition: 'all 0.2s ease', position: 'relative',
                 }}
               >
                 {item.label}
-              </motion.a>
+                {active === item.label && (
+                  <motion.div
+                    layoutId="nav-indicator"
+                    style={{
+                      position: 'absolute', bottom: '4px', left: '14px', right: '14px',
+                      height: '2px', background: '#f59e0b', borderRadius: '1px',
+                    }}
+                    transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                  />
+                )}
+              </motion.button>
             ))}
+            <motion.a
+              href="/Curriculo_Joao_Rabelo_v2.pdf"
+              download
+              whileHover={{ scale: 1.03, boxShadow: '0 0 20px rgba(245,158,11,0.3)' }}
+              whileTap={{ scale: 0.97 }}
+              style={{
+                marginLeft: '8px', padding: '8px 18px',
+                background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                color: '#080810', borderRadius: '8px', textDecoration: 'none',
+                fontSize: '13px', fontWeight: '700', letterSpacing: '0.02em',
+              }}
+            >
+              Currículo
+            </motion.a>
+          </div>
+
+          <motion.button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            whileTap={{ scale: 0.9 }}
+            style={{
+              background: 'none', border: '1px solid rgba(245,158,11,0.25)', borderRadius: '8px',
+              padding: '8px', cursor: 'pointer', display: 'none',
+              flexDirection: 'column', gap: '5px', width: '40px', height: '40px',
+              alignItems: 'center', justifyContent: 'center',
+            }}
+            className="mobile-menu-btn"
+          >
+            <motion.span animate={mobileOpen ? { rotate: 45, y: 7 } : { rotate: 0, y: 0 }}
+              style={{ display: 'block', width: '18px', height: '2px', background: '#f59e0b', borderRadius: '1px' }} />
+            <motion.span animate={mobileOpen ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
+              style={{ display: 'block', width: '18px', height: '2px', background: '#f59e0b', borderRadius: '1px' }} />
+            <motion.span animate={mobileOpen ? { rotate: -45, y: -7 } : { rotate: 0, y: 0 }}
+              style={{ display: 'block', width: '18px', height: '2px', background: '#f59e0b', borderRadius: '1px' }} />
+          </motion.button>
+        </div>
+      </motion.nav>
+
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            style={{
+              position: 'fixed', top: '64px', left: 0, right: 0, zIndex: 99,
+              background: 'rgba(8,8,16,0.97)', backdropFilter: 'blur(20px)',
+              borderBottom: '1px solid rgba(245,158,11,0.1)',
+              padding: '12px 20px 24px',
+            }}
+          >
+            {navItems.map((item, i) => (
+              <motion.button
+                key={item.label}
+                initial={{ opacity: 0, x: -16 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.06 }}
+                onClick={() => handleNav(item)}
+                style={{
+                  display: 'block', width: '100%', background: 'none', border: 'none',
+                  cursor: 'pointer', padding: '14px 0', fontSize: '16px',
+                  fontWeight: active === item.label ? '700' : '400',
+                  color: active === item.label ? '#f59e0b' : '#9ca3af',
+                  textAlign: 'left', borderBottom: '1px solid rgba(255,255,255,0.04)',
+                }}
+              >
+                {item.label}
+              </motion.button>
+            ))}
+            <motion.a
+              href="/Curriculo_Joao_Rabelo_v2.pdf"
+              download
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.35 }}
+              style={{
+                display: 'block', marginTop: '16px', padding: '13px 0',
+                background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                color: '#080810', borderRadius: '8px', textDecoration: 'none',
+                fontSize: '15px', fontWeight: '700', textAlign: 'center',
+              }}
+            >
+              Baixar Currículo
+            </motion.a>
           </motion.div>
         )}
       </AnimatePresence>
 
       <style>{`
-        @media (min-width: 768px) {
-          .hidden-mobile { display: flex !important; }
-          .show-mobile { display: none !important; }
+        @media (max-width: 768px) {
+          .desktop-nav { display: none !important; }
+          .mobile-menu-btn { display: flex !important; }
         }
-        @media (max-width: 767px) {
-          .hidden-mobile { display: none !important; }
-          .show-mobile { display: block !important; }
+        @media (min-width: 769px) {
+          .desktop-nav { display: flex !important; }
+          .mobile-menu-btn { display: none !important; }
         }
       `}</style>
-    </motion.nav>
+    </>
   )
 }

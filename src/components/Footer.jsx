@@ -1,65 +1,50 @@
 import { motion } from 'framer-motion'
-import { Github, Linkedin, Mail, Heart } from 'lucide-react'
 
 export default function Footer() {
   const year = new Date().getFullYear()
-
   return (
     <footer style={{
-      background: 'var(--navy)',
-      borderTop: '1px solid var(--border)',
-      padding: '40px 24px',
+      padding: '32px 20px',
+      borderTop: '1px solid rgba(255,255,255,0.04)',
+      background: 'rgba(8,8,16,0.8)',
     }}>
       <div style={{
-        maxWidth: '1100px',
-        margin: '0 auto',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        gap: '20px',
+        maxWidth: '1100px', margin: '0 auto',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        flexWrap: 'wrap', gap: '16px',
       }}>
-        {/* Logo */}
-        <div>
-          <p style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: '18px', marginBottom: '4px' }}>
-            João <span style={{ color: 'var(--accent)' }}>Rabelo</span>
-          </p>
-          <p style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>
-            Desenvolvedor Frontend · UX/UI Designer
-          </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <div style={{
+            width: '28px', height: '28px',
+            background: 'linear-gradient(135deg, #f59e0b, #d97706)',
+            borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontWeight: '900', fontSize: '11px', color: '#080810',
+          }}>JR</div>
+          <span style={{ fontSize: '14px', color: '#6b7280' }}>
+            © {year} João da Cunha Rabelo Neto
+          </span>
         </div>
-
-        {/* Redes sociais */}
-        <div style={{ display: 'flex', gap: '16px' }}>
+        <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
           {[
-            { icon: <Github size={20} />, href: 'https://github.com/jrabeloneto', label: 'GitHub' },
-            { icon: <Linkedin size={20} />, href: 'https://www.linkedin.com/in/joão-rabelo-44a184330', label: 'LinkedIn' },
-            { icon: <Mail size={20} />, href: 'mailto:jrabeloneto2@gmail.com', label: 'Email' },
-          ].map((s) => (
+            { label: 'GitHub', href: 'https://github.com/jrabeloneto' },
+            { label: 'LinkedIn', href: 'https://linkedin.com/in/jrabeloneto' },
+            { label: 'E-mail', href: 'mailto:joaocunharabelo@gmail.com' },
+          ].map((link) => (
             <motion.a
-              key={s.label}
-              href={s.href}
-              target={s.href.startsWith('http') ? '_blank' : undefined}
-              rel="noopener noreferrer"
-              whileHover={{ scale: 1.2, color: 'var(--accent)' }}
-              style={{ color: 'var(--text-secondary)', transition: 'color 0.2s' }}
-              aria-label={s.label}
+              key={link.label}
+              href={link.href}
+              target={link.href.startsWith('http') ? '_blank' : undefined}
+              rel={link.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+              whileHover={{ color: '#f59e0b' }}
+              style={{
+                fontSize: '13px', color: '#6b7280',
+                textDecoration: 'none', transition: 'color 0.2s',
+              }}
             >
-              {s.icon}
+              {link.label}
             </motion.a>
           ))}
         </div>
-
-        {/* Copyright */}
-        <p style={{
-          color: 'var(--text-secondary)',
-          fontSize: '13px',
-          display: 'flex', alignItems: 'center', gap: '6px',
-        }}>
-          © {year} João Rabelo. Feito com
-          <Heart size={14} style={{ color: '#ef4444', fill: '#ef4444' }} />
-          em Manaus, AM.
-        </p>
       </div>
     </footer>
   )
