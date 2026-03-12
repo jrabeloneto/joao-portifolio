@@ -77,7 +77,7 @@ function ProjectCard({ project, index }) {
         animate={hovered ? { y: -6 } : { y: 0 }}
         transition={{ duration: 0.3 }}
         style={{
-          background: 'rgba(19,19,31,0.9)',
+          background: 'rgba(13,30,53,0.9)',
           border: `1px solid ${hovered ? project.color + '30' : 'rgba(255,255,255,0.06)'}`,
           borderRadius: '20px',
           overflow: 'hidden',

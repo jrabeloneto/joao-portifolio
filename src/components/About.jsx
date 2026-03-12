@@ -134,7 +134,7 @@ export default function About() {
                 whileHover={{ y: -4, boxShadow: `0 20px 60px rgba(0,0,0,0.4), 0 0 30px ${p.color}18` }}
                 style={{
                   padding: '28px 24px',
-                  background: 'rgba(19,19,31,0.8)',
+                  background: 'rgba(13,30,53,0.8)',
                   border: '1px solid rgba(255,255,255,0.06)',
                   borderRadius: '16px',
                   transition: 'all 0.3s ease',
@@ -211,7 +211,7 @@ export default function About() {
                   whileHover={{ x: 4, borderColor: `${item.color}30` }}
                   style={{
                     padding: '20px 24px',
-                    background: 'rgba(19,19,31,0.6)',
+                    background: 'rgba(13,30,53,0.6)',
                     border: '1px solid rgba(255,255,255,0.05)',
                     borderRadius: '12px',
                     transition: 'all 0.2s ease',

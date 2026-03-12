@@ -46,7 +46,7 @@ function CircleSkill({ skill, index, inView }) {
       style={{
         display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px',
         padding: '16px 8px',
-        background: 'rgba(19,19,31,0.8)',
+        background: 'rgba(13,30,53,0.8)',
         border: '1px solid rgba(255,255,255,0.05)',
         borderRadius: '12px',
         cursor: 'default',
@@ -105,7 +105,7 @@ export default function Skills() {
   return (
     <section id="skills" style={{
       padding: 'clamp(60px, 10vw, 120px) 20px',
-      background: 'rgba(15,15,26,0.5)',
+      background: 'rgba(10,22,40,0.5)',
       position: 'relative',
     }}>
       {/* Divisor topo */}
@@ -218,7 +218,7 @@ export default function Skills() {
                 style={{
                   display: 'flex', alignItems: 'center', gap: '12px',
                   padding: '14px 18px',
-                  background: 'rgba(19,19,31,0.8)',
+                  background: 'rgba(13,30,53,0.8)',
                   border: '1px solid rgba(255,255,255,0.05)',
                   borderRadius: '10px',
                   transition: 'all 0.2s ease',

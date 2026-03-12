@@ -36,7 +36,7 @@ export default function Navigation() {
         style={{
           position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100,
           padding: '0 20px',
-          background: scrolled ? 'rgba(8,8,16,0.92)' : 'transparent',
+          background: scrolled ? 'rgba(6,13,31,0.92)' : 'transparent',
           backdropFilter: scrolled ? 'blur(20px)' : 'none',
           borderBottom: scrolled ? '1px solid rgba(245,158,11,0.08)' : 'none',
           transition: 'all 0.3s ease',
@@ -136,7 +136,7 @@ export default function Navigation() {
             transition={{ duration: 0.2 }}
             style={{
               position: 'fixed', top: '64px', left: 0, right: 0, zIndex: 99,
-              background: 'rgba(8,8,16,0.97)', backdropFilter: 'blur(20px)',
+              background: 'rgba(6,13,31,0.97)', backdropFilter: 'blur(20px)',
               borderBottom: '1px solid rgba(245,158,11,0.1)',
               padding: '12px 20px 24px',
             }}

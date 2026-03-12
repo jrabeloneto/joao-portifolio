@@ -240,7 +240,7 @@ export default function Hero() {
               whileHover={{ background: 'rgba(245,158,11,0.06)' }}
               style={{
                 padding: '20px 12px', textAlign: 'center',
-                background: 'rgba(8,8,16,0.8)',
+                background: 'rgba(6,13,31,0.8)',
                 transition: 'background 0.2s',
               }}
             >

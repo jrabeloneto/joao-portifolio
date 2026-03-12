@@ -71,7 +71,7 @@ export default function Contact() {
   return (
     <section id="contact" style={{
       padding: 'clamp(60px, 10vw, 120px) 20px',
-      background: 'rgba(15,15,26,0.5)',
+      background: 'rgba(10,22,40,0.5)',
       position: 'relative',
     }}>
       <div style={{
@@ -134,7 +134,7 @@ export default function Contact() {
                   style={{
                     display: 'flex', alignItems: 'center', gap: '16px',
                     padding: '20px 24px',
-                    background: 'rgba(19,19,31,0.8)',
+                    background: 'rgba(13,30,53,0.8)',
                     border: '1px solid rgba(255,255,255,0.06)',
                     borderRadius: '14px',
                     textDecoration: 'none',
@@ -163,7 +163,7 @@ export default function Contact() {
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: '16px',
                   padding: '20px 24px',
-                  background: 'rgba(19,19,31,0.8)',
+                  background: 'rgba(13,30,53,0.8)',
                   border: '1px solid rgba(255,255,255,0.06)',
                   borderRadius: '14px',
                 }}>
@@ -195,7 +195,7 @@ export default function Contact() {
           <div style={{
             textAlign: 'center',
             padding: 'clamp(32px, 5vw, 56px) clamp(20px, 5vw, 48px)',
-            background: 'rgba(19,19,31,0.6)',
+            background: 'rgba(13,30,53,0.6)',
             border: '1px solid rgba(245,158,11,0.1)',
             borderRadius: '20px',
             position: 'relative',

@@ -1,9 +1,9 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #080810;
-  --bg-secondary: #0f0f1a;
-  --bg-card: #13131f;
+  --bg-primary: #060d1f;
+  --bg-secondary: #0a1628;
+  --bg-card: #0d1e35;
   --bg-card-hover: #1a1a2e;
   --accent-gold: #f59e0b;
   --accent-gold-light: #fbbf24;
