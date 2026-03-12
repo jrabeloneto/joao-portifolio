@@ -264,7 +264,10 @@ export default function Hero() {
           transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
           style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
         >
-          <div style={{ position: 'relative', width: 'min(320px, 80vw)' }}>
+          {/* wrapper com padding para os cards flutuantes não serem cortados */}
+          <div style={{ position: 'relative', width: 'min(320px, 80vw)', paddingTop: '32px', paddingLeft: '32px', paddingRight: '8px' }}>
+            {/* Foto com borda gradiente — separada dos cards flutuantes */}
+            <div style={{ position: 'relative' }}>
             <div style={{
               position: 'absolute', inset: '-3px',
               borderRadius: '24px',
@@ -306,12 +309,14 @@ export default function Hero() {
                 </div>
               </div>
             </div>
+            </div>{/* fecha div da foto */}
 
+            {/* Card LIDERANÇA — dentro do wrapper com padding, não será cortado */}
             <motion.div
               animate={{ y: [0, -8, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
               style={{
-                position: 'absolute', top: '-20px', right: '-20px',
+                position: 'absolute', top: '0px', right: '0px',
                 padding: '10px 14px',
                 background: 'rgba(11,29,56,0.95)',
                 backdropFilter: 'blur(12px)',
@@ -329,7 +334,7 @@ export default function Hero() {
               animate={{ y: [0, 8, 0] }}
               transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
               style={{
-                position: 'absolute', bottom: '70px', left: '-24px',
+                position: 'absolute', bottom: '70px', left: '32px',
                 padding: '10px 14px',
                 background: 'rgba(11,29,56,0.95)',
                 backdropFilter: 'blur(12px)',

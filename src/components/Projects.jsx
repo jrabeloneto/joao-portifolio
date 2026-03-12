@@ -128,19 +128,22 @@ function ProjectCard({ project, index }) {
       transition={{ delay: index * 0.12, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       onHoverStart={() => setHovered(true)}
       onHoverEnd={() => setHovered(false)}
+      style={{ width: '100%', maxWidth: '100%' }}
     >
       <motion.div
         animate={hovered ? { y: -5 } : { y: 0 }}
         transition={{ duration: 0.3 }}
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 300px), 1fr))',
           background: 'rgba(11,29,56,0.7)',
           border: `1px solid ${hovered ? project.accent + '35' : 'rgba(255,255,255,0.05)'}`,
           borderRadius: '20px',
           overflow: 'hidden',
           transition: 'border-color 0.3s, box-shadow 0.3s',
           boxShadow: hovered ? `0 20px 60px rgba(0,0,0,0.4), 0 0 30px ${project.accent}12` : '0 4px 20px rgba(0,0,0,0.2)',
+          width: '100%',
+          maxWidth: '100%',
         }}
       >
         {/* Preview visual */}
@@ -333,7 +336,7 @@ export default function Projects() {
           </div>
         </AnimatedSection>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%', overflow: 'hidden' }}>
           {projects.map((project, i) => (
             <ProjectCard key={project.id} project={project} index={i} />
           ))}
