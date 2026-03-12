@@ -262,67 +262,24 @@ export default function Hero() {
           initial={{ opacity: 0, x: 40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+          style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}
         >
-          {/* wrapper com padding para os cards flutuantes não serem cortados */}
-          <div style={{ position: 'relative', width: 'min(320px, 80vw)', paddingTop: '32px', paddingLeft: '32px', paddingRight: '8px' }}>
-            {/* Foto com borda gradiente — separada dos cards flutuantes */}
-            <div style={{ position: 'relative' }}>
-            <div style={{
-              position: 'absolute', inset: '-3px',
-              borderRadius: '24px',
-              background: 'linear-gradient(135deg, #3b82f6, #10b981, #3b82f6)',
-              backgroundSize: '200% 200%',
-              animation: 'heroGradient 4s ease infinite',
-              zIndex: 0,
-            }} />
-            <div style={{
-              position: 'relative', zIndex: 1,
-              borderRadius: '22px',
-              overflow: 'hidden',
-              background: 'var(--bg-card)',
-            }}>
-              <img
-                src="/assets/joao-foto.jpg"
-                alt="João da Cunha Rabelo Neto"
-                style={{
-                  width: '100%', height: 'auto', display: 'block',
-                  objectFit: 'cover', aspectRatio: '3/4', objectPosition: 'top center',
-                }}
-              />
-              <div style={{
-                position: 'absolute', bottom: 0, left: 0, right: 0, height: '45%',
-                background: 'linear-gradient(to top, rgba(6,13,31,0.75) 0%, transparent 100%)',
-              }} />
-              <div style={{
-                position: 'absolute', bottom: '16px', left: '16px', right: '16px',
-              }}>
-                <div style={{
-                  padding: '8px 12px',
-                  background: 'rgba(6,13,31,0.85)',
-                  backdropFilter: 'blur(10px)',
-                  borderRadius: '10px',
-                  border: '1px solid rgba(59,130,246,0.2)',
-                }}>
-                  <div style={{ fontSize: '10px', color: '#60a5fa', fontWeight: '700', letterSpacing: '0.06em' }}>CEUNI-FAMETRO</div>
-                  <div style={{ fontSize: '12px', color: '#f0f6ff', fontWeight: '600' }}>Eng. de Software · 4° Período</div>
-                </div>
-              </div>
-            </div>
-            </div>{/* fecha div da foto */}
+          {/* Coluna flex vertical: card topo + foto + card baixo */}
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '12px', width: 'min(300px, 78vw)' }}>
 
-            {/* Card LIDERANÇA — dentro do wrapper com padding, não será cortado */}
+            {/* Card LIDERANÇA — acima da foto, alinhado à direita */}
             <motion.div
-              animate={{ y: [0, -8, 0] }}
+              animate={{ y: [0, -6, 0] }}
               transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
               style={{
-                position: 'absolute', top: '0px', right: '0px',
-                padding: '10px 14px',
+                padding: '10px 16px',
                 background: 'rgba(11,29,56,0.95)',
                 backdropFilter: 'blur(12px)',
                 borderRadius: '12px',
-                border: '1px solid rgba(16,185,129,0.25)',
-                boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+                border: '1px solid rgba(16,185,129,0.3)',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
+                alignSelf: 'flex-end',
+                marginRight: '4px',
               }}
             >
               <div style={{ fontSize: '10px', color: '#34d399', fontWeight: '700', letterSpacing: '0.06em', marginBottom: '2px' }}>LIDERANÇA</div>
@@ -330,31 +287,77 @@ export default function Hero() {
               <div style={{ fontSize: '10px', color: '#64748b' }}>Ordem DeMolay</div>
             </motion.div>
 
+            {/* Foto com borda gradiente */}
+            <div style={{ position: 'relative', width: '100%' }}>
+              <div style={{
+                position: 'absolute', inset: '-3px',
+                borderRadius: '24px',
+                background: 'linear-gradient(135deg, #3b82f6, #10b981, #3b82f6)',
+                backgroundSize: '200% 200%',
+                animation: 'heroGradient 4s ease infinite',
+                zIndex: 0,
+              }} />
+              <div style={{
+                position: 'relative', zIndex: 1,
+                borderRadius: '22px',
+                overflow: 'hidden',
+                background: 'var(--bg-card)',
+              }}>
+                <img
+                  src="/assets/joao-foto.jpg"
+                  alt="João da Cunha Rabelo Neto"
+                  style={{
+                    width: '100%', height: 'auto', display: 'block',
+                    objectFit: 'cover', aspectRatio: '3/4', objectPosition: 'top center',
+                  }}
+                />
+                <div style={{
+                  position: 'absolute', bottom: 0, left: 0, right: 0, height: '45%',
+                  background: 'linear-gradient(to top, rgba(6,13,31,0.75) 0%, transparent 100%)',
+                }} />
+                <div style={{ position: 'absolute', bottom: '16px', left: '16px', right: '16px' }}>
+                  <div style={{
+                    padding: '8px 12px',
+                    background: 'rgba(6,13,31,0.85)',
+                    backdropFilter: 'blur(10px)',
+                    borderRadius: '10px',
+                    border: '1px solid rgba(59,130,246,0.2)',
+                  }}>
+                    <div style={{ fontSize: '10px', color: '#60a5fa', fontWeight: '700', letterSpacing: '0.06em' }}>CEUNI-FAMETRO</div>
+                    <div style={{ fontSize: '12px', color: '#f0f6ff', fontWeight: '600' }}>Eng. de Software · 4° Período</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Card STACK — abaixo da foto, alinhado à esquerda */}
             <motion.div
-              animate={{ y: [0, 8, 0] }}
+              animate={{ y: [0, 6, 0] }}
               transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
               style={{
-                position: 'absolute', bottom: '70px', left: '32px',
-                padding: '10px 14px',
+                padding: '10px 16px',
                 background: 'rgba(11,29,56,0.95)',
                 backdropFilter: 'blur(12px)',
                 borderRadius: '12px',
-                border: '1px solid rgba(59,130,246,0.25)',
-                boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+                border: '1px solid rgba(59,130,246,0.3)',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.35)',
+                alignSelf: 'flex-start',
+                marginLeft: '4px',
               }}
             >
-              <div style={{ fontSize: '10px', color: '#60a5fa', fontWeight: '700', letterSpacing: '0.06em', marginBottom: '4px' }}>STACK</div>
-              <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap', maxWidth: '130px' }}>
+              <div style={{ fontSize: '10px', color: '#60a5fa', fontWeight: '700', letterSpacing: '0.06em', marginBottom: '6px' }}>STACK</div>
+              <div style={{ display: 'flex', gap: '5px', flexWrap: 'wrap', maxWidth: '160px' }}>
                 {['React', 'Angular', 'Java', 'TS'].map(t => (
                   <span key={t} style={{
-                    fontSize: '10px', padding: '2px 6px',
+                    fontSize: '10px', padding: '3px 8px',
                     background: 'rgba(59,130,246,0.15)',
-                    border: '1px solid rgba(59,130,246,0.2)',
-                    borderRadius: '4px', color: '#93c5fd',
+                    border: '1px solid rgba(59,130,246,0.25)',
+                    borderRadius: '5px', color: '#93c5fd',
                   }}>{t}</span>
                 ))}
               </div>
             </motion.div>
+
           </div>
         </motion.div>
       </div>
