@@ -4,8 +4,8 @@ import { motion, useInView } from 'framer-motion'
 const contactLinks = [
   {
     label: 'E-mail',
-    value: 'joaocunharabelo@gmail.com',
-    href: 'mailto:joaocunharabelo@gmail.com',
+    value: 'jrabeloneto2@gmail.com',
+    href: 'mailto:jrabeloneto2@gmail.com',
     color: '#3b82f6',
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -226,7 +226,7 @@ export default function Contact() {
               Combino visão estratégica de gestor com habilidades técnicas em desenvolvimento. Vamos construir algo incrível juntos.
             </p>
             <motion.a
-              href="mailto:joaocunharabelo@gmail.com"
+              href="mailto:jrabeloneto2@gmail.com"
               whileHover={{ scale: 1.04, boxShadow: '0 0 40px rgba(59,130,246,0.35)' }}
               whileTap={{ scale: 0.96 }}
               style={{

@@ -28,7 +28,7 @@ export default function Footer() {
           {[
             { label: 'GitHub', href: 'https://github.com/jrabeloneto' },
             { label: 'LinkedIn', href: 'https://linkedin.com/in/jrabeloneto' },
-            { label: 'E-mail', href: 'mailto:joaocunharabelo@gmail.com' },
+            { label: 'E-mail', href: 'mailto:jrabeloneto2@gmail.com' },
           ].map((link) => (
             <motion.a
               key={link.label}
