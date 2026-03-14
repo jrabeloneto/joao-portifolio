@@ -42,6 +42,19 @@ const projects = [
     mockBg: 'linear-gradient(135deg, #060d1f 0%, #0b1d38 60%, #112240 100%)',
   },
   {
+    id: '05',
+    category: 'Produtividade',
+    title: 'TaskFlow Kanban',
+    subtitle: 'React 18 + TypeScript + Framer Motion + dnd-kit',
+    desc: 'Board Kanban interativo com drag and drop fluido entre colunas, criação e edição de tarefas com modal animado, prioridades coloridas, tags customizáveis, filtros, busca, dark/light mode e persistência via localStorage. Animações sofisticadas com Framer Motion demonstrando domínio de UX/UI.',
+    techs: ['React 18', 'TypeScript 5', 'Framer Motion', 'dnd-kit', 'Vite', 'Lucide React'],
+    github: 'https://github.com/jrabeloneto/taskflow',
+    demo: 'https://taskflow-eight-blond.vercel.app',
+    accent: '#6366f1',
+    mockContent: 'taskflow_kanban',
+    mockBg: 'linear-gradient(135deg, #060d1f 0%, #0d0b2e 60%, #130f3d 100%)',
+  },
+  {
     id: '04',
     category: 'Full-Stack',
     title: 'TeamFlow',
@@ -118,6 +131,48 @@ function ProjectMock({ content, bg, accent }) {
               <div style={{ marginTop: '5px', height: '13px', background: `${accent}25`, borderRadius: '3px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <span style={{ fontSize: '7px', color: accent, fontWeight: '700' }}>COMPRAR</span>
               </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+  if (content === 'taskflow_kanban') {
+    const cols = [
+      { label: 'A Fazer', color: '#6366f1', count: 3 },
+      { label: 'Em Progresso', color: '#3b82f6', count: 2 },
+      { label: 'Concluído', color: '#10b981', count: 4 },
+    ]
+    return (
+      <div style={{ width: '100%', height: '100%', background: bg, padding: '14px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', gap: '5px', marginBottom: '10px', marginTop: '28px' }}>
+          {['#ff5f57', '#febc2e', '#28c840'].map(c => (
+            <div key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c }} />
+          ))}
+        </div>
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+          <div style={{ fontSize: '10px', fontWeight: '800', color: '#6366f1', letterSpacing: '0.08em' }}>TASKFLOW</div>
+          <div style={{ display: 'flex', gap: '4px' }}>
+            {['Urgente', 'Alta'].map(p => (
+              <span key={p} style={{ fontSize: '6px', padding: '1px 4px', background: p === 'Urgente' ? '#ef444420' : '#f59e0b20', color: p === 'Urgente' ? '#ef4444' : '#f59e0b', borderRadius: '3px' }}>{p}</span>
+            ))}
+          </div>
+        </div>
+        {/* Kanban columns */}
+        <div style={{ flex: 1, display: 'flex', gap: '7px', overflow: 'hidden' }}>
+          {cols.map(col => (
+            <div key={col.label} style={{ flex: 1, background: `${col.color}08`, border: `1px solid ${col.color}20`, borderRadius: '8px', padding: '7px', display: 'flex', flexDirection: 'column', gap: '5px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '4px' }}>
+                <span style={{ fontSize: '7px', fontWeight: '700', color: col.color }}>{col.label}</span>
+                <span style={{ fontSize: '7px', background: `${col.color}25`, color: col.color, borderRadius: '50%', width: '14px', height: '14px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: '800' }}>{col.count}</span>
+              </div>
+              {Array.from({ length: Math.min(col.count, 2) }).map((_, i) => (
+                <div key={i} style={{ background: 'rgba(255,255,255,0.04)', borderRadius: '5px', padding: '5px', border: `1px solid ${col.color}15` }}>
+                  <div style={{ height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', marginBottom: '3px', width: `${60 + i * 20}%` }} />
+                  <div style={{ height: '3px', background: 'rgba(255,255,255,0.05)', borderRadius: '2px', width: '50%' }} />
+                </div>
+              ))}
             </div>
           ))}
         </div>
