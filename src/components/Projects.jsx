@@ -55,6 +55,19 @@ const projects = [
     mockBg: 'linear-gradient(135deg, #060d1f 0%, #0d0b2e 60%, #130f3d 100%)',
   },
   {
+    id: '06',
+    category: 'Angular',
+    title: 'EventHub',
+    subtitle: 'Angular 17 + Chart.js + Angular Material',
+    desc: 'Plataforma de gerenciamento de eventos com dashboard interativo, gráficos de análise com Chart.js, listagem com filtros avançados por categoria e status, e visualização detalhada de cada evento. Desenvolvida com Angular 17 Standalone Components, Angular Material e design responsivo dark-mode.',
+    techs: ['Angular 17', 'TypeScript', 'Chart.js', 'Angular Material', 'RxJS', 'Standalone Components'],
+    github: 'https://github.com/jrabeloneto/eventhub',
+    demo: 'https://eventhub-delta-flame.vercel.app',
+    accent: '#f59e0b',
+    mockContent: 'eventhub',
+    mockBg: 'linear-gradient(135deg, #0d0a00 0%, #1a1200 60%, #221800 100%)',
+  },
+  {
     id: '04',
     category: 'Full-Stack',
     title: 'TeamFlow',
@@ -176,6 +189,48 @@ function ProjectMock({ content, bg, accent }) {
             </div>
           ))}
         </div>
+      </div>
+    )
+  }
+  if (content === 'eventhub') {
+    return (
+      <div style={{ width: '100%', height: '100%', background: bg, padding: '14px', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', gap: '5px', marginBottom: '10px', marginTop: '28px' }}>
+          {['#ff5f57', '#febc2e', '#28c840'].map(c => (
+            <div key={c} style={{ width: '9px', height: '9px', borderRadius: '50%', background: c }} />
+          ))}
+        </div>
+        {/* Header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
+          <div style={{ fontSize: '10px', fontWeight: '800', color: accent, letterSpacing: '0.08em' }}>EVENTHUB</div>
+          <span style={{ fontSize: '7px', padding: '2px 6px', background: `${accent}20`, color: accent, borderRadius: '4px' }}>Dashboard</span>
+        </div>
+        {/* Stats */}
+        <div style={{ display: 'flex', gap: '5px', marginBottom: '8px' }}>
+          {[['8', 'Eventos'], ['1739', 'Inscritos'], ['25%', 'Concluído']].map(([n, l]) => (
+            <div key={l} style={{ flex: 1, background: `${accent}10`, border: `1px solid ${accent}20`, borderRadius: '6px', padding: '4px', textAlign: 'center' }}>
+              <div style={{ fontSize: '11px', fontWeight: '800', color: accent }}>{n}</div>
+              <div style={{ fontSize: '6px', color: '#64748b' }}>{l}</div>
+            </div>
+          ))}
+        </div>
+        {/* Chart mock */}
+        <div style={{ background: 'rgba(255,255,255,0.03)', borderRadius: '8px', padding: '8px', marginBottom: '8px', border: `1px solid ${accent}15` }}>
+          <div style={{ fontSize: '7px', color: '#64748b', marginBottom: '6px' }}>Eventos por Mês</div>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '3px', height: '32px' }}>
+            {[40, 65, 45, 80, 55, 90, 70].map((h, i) => (
+              <div key={i} style={{ flex: 1, height: `${h}%`, background: i === 5 ? accent : `${accent}40`, borderRadius: '2px 2px 0 0' }} />
+            ))}
+          </div>
+        </div>
+        {/* Events list */}
+        {[['Angular Summit 2026', 'Tech'], ['React Conf Brasil', 'Dev'], ['UX Design Week', 'Design']].map(([name, cat]) => (
+          <div key={name} style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '4px 6px', background: 'rgba(255,255,255,0.03)', borderRadius: '5px', marginBottom: '3px', border: '1px solid rgba(255,255,255,0.04)' }}>
+            <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: accent, flexShrink: 0 }} />
+            <div style={{ flex: 1, fontSize: '7px', color: '#94a3b8', fontWeight: '600', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{name}</div>
+            <span style={{ fontSize: '6px', padding: '1px 4px', background: `${accent}20`, color: accent, borderRadius: '3px' }}>{cat}</span>
+          </div>
+        ))}
       </div>
     )
   }
