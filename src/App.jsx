@@ -12,10 +12,15 @@ export default function App() {
   const [isDesktop, setIsDesktop] = useState(false)
 
   useEffect(() => {
-    setIsDesktop(window.innerWidth >= 1024)
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 1024)
+    checkDesktop()
     const handleMouseMove = (e) => setCursorPos({ x: e.clientX, y: e.clientY })
     window.addEventListener('mousemove', handleMouseMove)
-    return () => window.removeEventListener('mousemove', handleMouseMove)
+    window.addEventListener('resize', checkDesktop)
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('resize', checkDesktop)
+    }
   }, [])
 
   return (

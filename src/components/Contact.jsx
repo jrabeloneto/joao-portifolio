@@ -214,7 +214,7 @@ export default function Contact() {
               marginBottom: '20px',
             }}>
               <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10b981', boxShadow: '0 0 8px rgba(16,185,129,0.8)' }} />
-              <span style={{ fontSize: '13px', fontWeight: '500', color: '#34d399' }}>Disponivel para Estagio</span>
+              <span style={{ fontSize: '13px', fontWeight: '500', color: '#34d399' }}>Disponível para Estágio</span>
             </div>
             <h3 style={{
               fontSize: 'clamp(22px, 4vw, 36px)', fontWeight: '800',

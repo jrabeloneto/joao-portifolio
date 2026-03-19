@@ -368,11 +368,11 @@ function ProjectCard({ project, index }) {
             {project.techs.map(tech => (
               <span key={tech} style={{
                 padding: '3px 9px',
-                background: `${project.accent}10`,
-                border: `1px solid ${project.accent}20`,
+                background: `${project.accent}15`,
+                border: `1px solid ${project.accent}30`,
                 borderRadius: '5px',
                 fontSize: '11px', fontWeight: '600',
-                color: project.accent === '#3b82f6' ? '#93c5fd' : '#6ee7b7',
+                color: project.accent,
               }}>
                 {tech}
               </span>

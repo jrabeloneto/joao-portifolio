@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const navItems = [
-  { label: 'Início', href: '#home' },
+  { label: 'Início', href: '#inicio' },
   { label: 'Sobre', href: '#about' },
   { label: 'Habilidades', href: '#skills' },
   { label: 'Projetos', href: '#projects' },
@@ -18,6 +18,26 @@ export default function Navigation() {
     const onScroll = () => setScrolled(window.scrollY > 40)
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  useEffect(() => {
+    const sectionIds = navItems.map(item => item.href.slice(1))
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const matched = navItems.find(item => item.href === `#${entry.target.id}`)
+            if (matched) setActive(matched.label)
+          }
+        })
+      },
+      { rootMargin: '-40% 0px -55% 0px', threshold: 0 }
+    )
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id)
+      if (el) observer.observe(el)
+    })
+    return () => observer.disconnect()
   }, [])
 
   const handleNav = (item) => {
