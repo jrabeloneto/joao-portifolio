@@ -67,9 +67,10 @@ export default function Navigation() {
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '64px',
         }}>
           <motion.a
-            href="#home"
+            href="#inicio"
             onClick={(e) => { e.preventDefault(); handleNav(navItems[0]) }}
             whileHover={{ scale: 1.02 }}
+            aria-label="Ir para o início"
             style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '10px' }}
           >
             <div style={{
@@ -89,6 +90,7 @@ export default function Navigation() {
                 key={item.label}
                 onClick={() => handleNav(item)}
                 whileHover={{ scale: 1.02 }}
+                aria-current={active === item.label ? 'page' : undefined}
                 style={{
                   background: 'none', border: 'none', cursor: 'pointer',
                   padding: '8px 14px', borderRadius: '8px', fontSize: '14px',
@@ -129,6 +131,8 @@ export default function Navigation() {
           <motion.button
             onClick={() => setMobileOpen(!mobileOpen)}
             whileTap={{ scale: 0.9 }}
+            aria-label={mobileOpen ? 'Fechar menu' : 'Abrir menu'}
+            aria-expanded={mobileOpen}
             style={{
               background: 'none', border: '1px solid rgba(59,130,246,0.25)', borderRadius: '8px',
               padding: '8px', cursor: 'pointer', display: 'none',

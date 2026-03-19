@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import { motion, useInView } from 'framer-motion'
+import AnimatedSection from './AnimatedSection'
 
 const techSkills = [
   { name: 'JavaScript', level: 85, color: '#3b82f6' },
@@ -83,20 +84,6 @@ function CircleSkill({ skill, index, inView }) {
   )
 }
 
-function AnimatedSection({ children, delay = 0 }) {
-  const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px' })
-  return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 40 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
-    >
-      {children}
-    </motion.div>
-  )
-}
 
 export default function Skills() {
   const skillsRef = useRef(null)
@@ -126,7 +113,7 @@ export default function Skills() {
               marginBottom: '16px',
             }}>
               <span style={{ fontSize: '11px', fontWeight: '700', color: '#3b82f6', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                Competencias
+                Competências
               </span>
             </div>
             <h2 style={{
@@ -136,7 +123,7 @@ export default function Skills() {
               Habilidades <span style={{
                 background: 'linear-gradient(135deg, #3b82f6, #60a5fa)',
                 WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
-              }}>Tecnicas</span>
+              }}>Técnicas</span>
             </h2>
           </div>
         </AnimatedSection>
@@ -200,7 +187,7 @@ export default function Skills() {
             fontSize: '20px', fontWeight: '700', color: '#f9fafb',
             marginBottom: '24px', letterSpacing: '-0.02em',
           }}>
-            Competencias Interpessoais
+            Competências Interpessoais
           </h3>
           <div style={{
             display: 'grid',

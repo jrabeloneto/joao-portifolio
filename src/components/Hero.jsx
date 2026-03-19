@@ -306,6 +306,8 @@ export default function Hero() {
                 <img
                   src="/assets/joao-foto.jpg"
                   alt="João da Cunha Rabelo Neto"
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     width: '100%', height: 'auto', display: 'block',
                     objectFit: 'cover', aspectRatio: '3/4', objectPosition: 'top center',
