@@ -1,0 +1,79 @@
+.root {
+  background: var(--color-bg);
+  color: var(--color-text);
+  padding: clamp(4rem, 10vw, 9rem) clamp(1.5rem, 6vw, 6rem);
+  min-height: 80vh;
+}
+
+.header {
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+  max-width: 900px;
+}
+
+.kicker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--color-accent-cool);
+  display: block;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+}
+
+.heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 7rem);
+  line-height: 0.9;
+}
+
+.heading em {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--color-accent-cool);
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 3rem;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.groupTitle {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--color-text-dim);
+  text-transform: uppercase;
+  font-weight: 400;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.chip {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  padding: 0.55rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--color-text-dim) 50%, transparent);
+  border-radius: 100px;
+  transition: all 0.3s var(--ease-cine);
+  cursor: none;
+  letter-spacing: 0.05em;
+}
+
+.chip:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--color-accent) 40%, transparent);
+  transform: translateY(-2px);
+}

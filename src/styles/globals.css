@@ -1,0 +1,69 @@
+:root {
+  --color-bg: #050508;
+  --color-surface: #0A0D1A;
+  --color-surface-2: #0F1525;
+  --color-surface-light: #F5F2EC;
+  --color-accent: #FF6500;
+  --color-accent-cool: #4FACFE;
+  --color-fog: #C8B8FF18;
+  --color-text: #F0EDE8;
+  --color-text-dim: #7A7A8C;
+  --color-text-dark: #1A1A22;
+
+  --ease-cine: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+html { scroll-behavior: auto; } /* Lenis handles it */
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
+  min-height: 100vh;
+  cursor: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@media (max-width: 768px) {
+  body { cursor: auto; }
+}
+
+a { color: inherit; text-decoration: none; }
+
+button {
+  font: inherit;
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: none;
+}
+
+img { max-width: 100%; display: block; }
+
+/* Grain overlay */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url('/assets/noise.svg');
+  background-size: 300px 300px;
+  opacity: 0.045;
+  pointer-events: none;
+  z-index: 9999;
+  animation: grain 0.5s steps(1) infinite;
+  mix-blend-mode: overlay;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}

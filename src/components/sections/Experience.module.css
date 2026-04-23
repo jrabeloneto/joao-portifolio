@@ -1,0 +1,113 @@
+.root {
+  background: var(--color-surface-light);
+  color: var(--color-text-dark);
+  border-radius: 32px 32px 0 0;
+  padding: clamp(4rem, 10vw, 9rem) clamp(1.5rem, 6vw, 6rem);
+  margin-top: -32px;
+  position: relative;
+  z-index: 5;
+  min-height: 80vh;
+}
+
+.header {
+  margin-bottom: clamp(3rem, 6vw, 5rem);
+}
+
+.kicker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--color-accent);
+  display: block;
+  margin-bottom: 1.2rem;
+  text-transform: uppercase;
+}
+
+.heading {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 8vw, 7rem);
+  line-height: 0.9;
+  color: var(--color-text-dark);
+}
+
+.heading em {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.timeline {
+  position: relative;
+  padding-left: 3rem;
+}
+
+.svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 100%;
+  color: var(--color-accent);
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+.entry {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.dot {
+  position: absolute;
+  left: -3rem;
+  top: 0.4rem;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  box-shadow:
+    0 0 0 4px var(--color-surface-light),
+    0 0 20px var(--color-accent);
+  transform: translateX(3px);
+}
+
+.when {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--color-accent);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+}
+
+.title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  color: var(--color-text-dark);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+}
+
+.where {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--color-text-dark);
+  opacity: 0.7;
+}
+
+.body {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text-dark);
+  opacity: 0.8;
+  max-width: 62ch;
+  margin-top: 0.5rem;
+}
