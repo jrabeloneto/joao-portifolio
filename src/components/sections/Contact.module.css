@@ -125,13 +125,13 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--color-accent);
+  background: linear-gradient(135deg, var(--mist), var(--sky-3));
   transform: translateY(100%);
-  transition: transform 0.4s var(--ease-cine);
+  transition: transform 0.5s var(--ease-cine);
   z-index: -1;
 }
 
-.submit:hover { color: var(--color-bg); }
+.submit:hover { color: var(--shadow); }
 .submit:hover::before { transform: translateY(0); }
 
 .footer {

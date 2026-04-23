@@ -5,25 +5,22 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: radial-gradient(ellipse at center, #0A0D1A 0%, #050508 75%);
+  background: var(--shadow);
   padding: 0 2rem;
 }
 
 .canvas {
   position: absolute;
   inset: 0;
-  opacity: 0.95;
+  opacity: 1;
 }
 
 .vignette {
   position: absolute;
   inset: 0;
-  background: radial-gradient(
-    ellipse at center,
-    transparent 40%,
-    rgba(5, 5, 8, 0.55) 85%,
-    rgba(5, 5, 8, 0.9) 100%
-  );
+  background:
+    radial-gradient(ellipse at 50% 35%, transparent 30%, rgba(26, 31, 46, 0.35) 80%, rgba(15, 19, 32, 0.75) 100%),
+    linear-gradient(to bottom, transparent 0%, transparent 60%, rgba(26, 31, 46, 0.5) 100%);
   pointer-events: none;
   z-index: 1;
 }
@@ -34,9 +31,11 @@
   left: 2.5rem;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.7rem;
-  color: var(--color-text-dim);
+  color: var(--cream);
+  opacity: 0.7;
   letter-spacing: 0.3em;
   z-index: 3;
+  mix-blend-mode: difference;
 }
 
 .content {
@@ -50,8 +49,13 @@
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(4rem, 15vw, 15rem);
   line-height: 0.88;
-  color: var(--color-text);
+  color: var(--cream);
   letter-spacing: 0.01em;
+  text-shadow:
+    -1px 0 0 color-mix(in srgb, var(--uncanny) 45%, transparent),
+    1px 0 0 color-mix(in srgb, var(--sky-1) 45%, transparent),
+    0 0 80px rgba(26, 31, 46, 0.55);
+  mix-blend-mode: normal;
 }
 
 .lineWrap {
@@ -70,7 +74,8 @@
   font-family: 'IBM Plex Mono', monospace;
   font-size: clamp(0.75rem, 1.3vw, 0.95rem);
   letter-spacing: 0.35em;
-  color: var(--color-text-dim);
+  color: var(--cream);
+  opacity: 0.72;
   text-transform: uppercase;
 }
 
@@ -85,14 +90,17 @@
   flex-wrap: wrap;
 }
 
-.rolesLabel { color: var(--color-text-dim); }
+.rolesLabel {
+  color: var(--cream);
+  opacity: 0.55;
+}
 
 .role {
-  color: var(--color-accent);
+  color: var(--sky-1);
   min-width: 220px;
   text-align: left;
   animation: typewriter 0.4s ease;
-  text-shadow: 0 0 20px color-mix(in srgb, var(--color-accent) 40%, transparent);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--mist) 55%, transparent);
 }
 
 @keyframes typewriter {
@@ -104,29 +112,34 @@
   display: inline-block;
   margin-top: 3rem;
   padding: 1.1rem 2.8rem;
-  border: 1px solid var(--color-accent);
-  color: var(--color-text);
+  border: 1px solid color-mix(in srgb, var(--cream) 70%, transparent);
+  color: var(--cream);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.82rem;
   letter-spacing: 0.3em;
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  transition: color 0.4s;
+  transition: color 0.4s, border-color 0.4s;
   cursor: none;
+  backdrop-filter: blur(4px);
+  background: color-mix(in srgb, var(--shadow) 20%, transparent);
 }
 
 .cta::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--color-accent);
+  background: linear-gradient(135deg, var(--mist), var(--sky-3));
   transform: translateY(100%);
-  transition: transform 0.4s var(--ease-cine);
+  transition: transform 0.5s var(--ease-cine);
   z-index: -1;
 }
 
-.cta:hover { color: var(--color-bg); }
+.cta:hover {
+  color: var(--shadow);
+  border-color: var(--mist);
+}
 .cta:hover::before { transform: translateY(0); }
 
 .cornerMeta {
@@ -138,10 +151,12 @@
   gap: 0.3rem;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.7rem;
-  color: var(--color-text-dim);
+  color: var(--cream);
+  opacity: 0.6;
   letter-spacing: 0.2em;
   text-align: right;
   z-index: 3;
+  mix-blend-mode: difference;
 }
 
 .scroll {
@@ -151,7 +166,8 @@
   transform: translateX(-50%);
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.65rem;
-  color: var(--color-text-dim);
+  color: var(--cream);
+  opacity: 0.75;
   letter-spacing: 0.35em;
   display: flex;
   flex-direction: column;
@@ -165,7 +181,12 @@
 .scrollLine {
   width: 1px;
   height: 44px;
-  background: linear-gradient(to bottom, var(--color-accent), transparent);
+  background: linear-gradient(to bottom, var(--cream), transparent);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 0.35; }
 }
 
 @media (max-width: 768px) {

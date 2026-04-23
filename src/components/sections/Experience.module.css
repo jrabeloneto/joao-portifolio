@@ -1,5 +1,7 @@
 .root {
-  background: var(--color-surface-light);
+  background:
+    radial-gradient(ellipse at 20% 100%, color-mix(in srgb, var(--mist) 30%, transparent) 0%, transparent 60%),
+    linear-gradient(180deg, var(--cream) 0%, var(--cream-2) 60%, var(--sky-2) 100%);
   color: var(--color-text-dark);
   border-radius: 32px 32px 0 0;
   padding: clamp(4rem, 10vw, 9rem) clamp(1.5rem, 6vw, 6rem);
@@ -74,7 +76,7 @@
   border-radius: 50%;
   background: var(--color-accent);
   box-shadow:
-    0 0 0 4px var(--color-surface-light),
+    0 0 0 4px var(--cream),
     0 0 20px var(--color-accent);
   transform: translateX(3px);
 }

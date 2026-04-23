@@ -1,5 +1,7 @@
 .root {
-  background: var(--color-surface-light);
+  background:
+    radial-gradient(ellipse at 80% 0%, color-mix(in srgb, var(--sky-3) 35%, transparent) 0%, transparent 55%),
+    linear-gradient(180deg, var(--cream-2) 0%, var(--cream) 100%);
   color: var(--color-text-dark);
   border-radius: 32px 32px 0 0;
   padding: clamp(4rem, 10vw, 9rem) clamp(1.5rem, 6vw, 6rem);
@@ -7,6 +9,23 @@
   position: relative;
   z-index: 3;
   margin-top: -32px;
+  overflow: hidden;
+}
+
+.root::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0,
+    transparent 80px,
+    color-mix(in srgb, var(--mist) 18%, transparent) 80px,
+    color-mix(in srgb, var(--mist) 18%, transparent) 81px
+  );
+  opacity: 0.35;
+  pointer-events: none;
+  mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
 }
 
 .grid {
@@ -61,12 +80,15 @@
 .visualCard {
   width: min(360px, 80%);
   aspect-ratio: 3/4;
-  background: linear-gradient(135deg, #0A0D1A 0%, #1a1525 60%, #FF6500 160%);
+  background: linear-gradient(135deg, var(--deep-blue) 0%, var(--mist) 65%, var(--sky-3) 120%);
   border-radius: 12px;
   padding: 1.5rem;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 30px 80px rgba(10, 13, 26, 0.25);
+  box-shadow:
+    0 30px 80px color-mix(in srgb, var(--deep-blue) 30%, transparent),
+    0 0 120px color-mix(in srgb, var(--mist) 25%, transparent),
+    inset 0 0 60px color-mix(in srgb, var(--sun) 15%, transparent);
 }
 
 .visualCard::before {
@@ -120,7 +142,7 @@
   grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   padding-top: 3rem;
-  border-top: 1px solid rgba(26, 26, 34, 0.15);
+  border-top: 1px solid color-mix(in srgb, var(--mist) 35%, transparent);
 }
 
 @media (max-width: 700px) {
