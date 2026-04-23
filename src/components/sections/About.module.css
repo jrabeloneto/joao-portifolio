@@ -1,12 +1,16 @@
 .root {
   background:
-    radial-gradient(ellipse at 80% 0%, color-mix(in srgb, var(--cream) 40%, transparent) 0%, transparent 55%);
-  color: var(--shadow);
+    radial-gradient(ellipse at 75% 0%, color-mix(in srgb, var(--mist) 18%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse at 0% 100%, color-mix(in srgb, var(--sky-3) 12%, transparent) 0%, transparent 60%),
+    linear-gradient(180deg, var(--shadow) 0%, var(--shadow-2) 100%);
+  color: var(--cream);
+  border-radius: 32px 32px 0 0;
   padding: clamp(6rem, 14vw, 12rem) clamp(1.5rem, 6vw, 6rem);
   min-height: 100vh;
   position: relative;
   z-index: 3;
-  overflow: visible;
+  margin-top: -32px;
+  overflow: hidden;
 }
 
 .root::before {
@@ -50,9 +54,8 @@
   font-family: 'Playfair Display', serif;
   font-size: clamp(1.2rem, 2.2vw, 2rem);
   line-height: 1.4;
-  color: var(--shadow);
+  color: var(--cream);
   margin-bottom: 1.5rem;
-  text-shadow: 0 2px 20px color-mix(in srgb, var(--cream) 80%, transparent);
 }
 
 .paragraph strong { font-weight: 700; }
@@ -165,7 +168,7 @@
 .statValue {
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(3rem, 6vw, 5rem);
-  color: var(--color-text-dark);
+  color: var(--cream);
   line-height: 1;
 }
 
@@ -173,7 +176,7 @@
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.72rem;
   letter-spacing: 0.2em;
-  color: var(--color-text-dark);
+  color: var(--cream);
   opacity: 0.6;
   text-transform: uppercase;
 }

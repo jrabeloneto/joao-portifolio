@@ -1,7 +1,12 @@
 .root {
-  background: radial-gradient(ellipse at 80% 50%, color-mix(in srgb, var(--sky-3) 22%, transparent) 0%, transparent 65%);
-  color: var(--shadow);
+  background:
+    radial-gradient(ellipse at 20% 100%, color-mix(in srgb, var(--mist) 15%, transparent) 0%, transparent 55%),
+    radial-gradient(ellipse at 90% 20%, color-mix(in srgb, var(--sky-3) 12%, transparent) 0%, transparent 60%),
+    linear-gradient(180deg, var(--shadow-2) 0%, var(--shadow) 100%);
+  color: var(--cream);
+  border-radius: 32px 32px 0 0;
   padding: clamp(6rem, 14vw, 12rem) clamp(1.5rem, 6vw, 6rem);
+  margin-top: -32px;
   position: relative;
   z-index: 5;
   min-height: 80vh;
@@ -25,8 +30,7 @@
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(2.5rem, 8vw, 7rem);
   line-height: 0.9;
-  color: var(--shadow);
-  text-shadow: 0 4px 30px color-mix(in srgb, var(--cream) 80%, transparent);
+  color: var(--cream);
 }
 
 .heading em {
@@ -73,16 +77,16 @@
   border-radius: 50%;
   background: var(--color-accent);
   box-shadow:
-    0 0 0 4px var(--cream-2),
-    0 0 20px var(--color-accent),
-    0 0 40px color-mix(in srgb, var(--mist) 60%, transparent);
+    0 0 0 4px var(--shadow),
+    0 0 20px var(--mist),
+    0 0 40px color-mix(in srgb, var(--sky-3) 60%, transparent);
   transform: translateX(3px);
   animation: dot-pulse 2.4s ease-in-out infinite;
 }
 
 @keyframes dot-pulse {
-  0%, 100% { box-shadow: 0 0 0 4px var(--cream-2), 0 0 20px var(--color-accent), 0 0 40px color-mix(in srgb, var(--mist) 60%, transparent); }
-  50% { box-shadow: 0 0 0 4px var(--cream-2), 0 0 35px var(--color-accent), 0 0 80px color-mix(in srgb, var(--mist) 80%, transparent); }
+  0%, 100% { box-shadow: 0 0 0 4px var(--shadow), 0 0 20px var(--mist), 0 0 40px color-mix(in srgb, var(--sky-3) 60%, transparent); }
+  50% { box-shadow: 0 0 0 4px var(--shadow), 0 0 35px var(--mist), 0 0 80px color-mix(in srgb, var(--sky-3) 80%, transparent); }
 }
 
 .entry {
@@ -107,7 +111,7 @@
 .title {
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(1.6rem, 3vw, 2.4rem);
-  color: var(--color-text-dark);
+  color: var(--cream);
   line-height: 1.05;
   letter-spacing: 0.01em;
 }
@@ -115,7 +119,7 @@
 .where {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.85rem;
-  color: var(--color-text-dark);
+  color: var(--cream);
   opacity: 0.7;
 }
 
@@ -123,7 +127,7 @@
   font-family: 'Inter', sans-serif;
   font-size: 1rem;
   line-height: 1.6;
-  color: var(--color-text-dark);
+  color: var(--cream);
   opacity: 0.8;
   max-width: 62ch;
   margin-top: 0.5rem;

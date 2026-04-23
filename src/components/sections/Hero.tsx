@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+import { HeroScene } from '../three/HeroScene';
 import styles from './Hero.module.css';
 
 const ROLES = ['React & Node', 'Three.js & 3D Web', 'Angular & Spring Boot'];
@@ -54,11 +55,10 @@ export function Hero() {
 
   return (
     <section className={styles.root} ref={rootRef}>
-      {/* decorative floating cloud puffs — sit in front, parallax at different speeds */}
-      <span className={`${styles.cloudFg} ${styles.cloudA}`} data-speed="0.55" aria-hidden />
-      <span className={`${styles.cloudFg} ${styles.cloudB}`} data-speed="0.7" aria-hidden />
-      <span className={`${styles.cloudFg} ${styles.cloudC}`} data-speed="1.3" aria-hidden />
-      <span className={`${styles.cloudFg} ${styles.cloudD}`} data-speed="1.5" aria-hidden />
+      <div className={styles.canvas}>
+        <HeroScene />
+      </div>
+      <div className={styles.vignette} aria-hidden />
 
       <span className={styles.kicker} data-speed="1.2">// portfolio · v2 · 2026</span>
 

@@ -5,15 +5,14 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: transparent;
+  background: var(--shadow);
   padding: 0 2rem;
 }
 
 .canvas {
   position: absolute;
   inset: 0;
-  opacity: 0;
-  pointer-events: none;
+  opacity: 1;
 }
 
 .vignette {
