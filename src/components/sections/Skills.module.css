@@ -14,7 +14,7 @@
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.75rem;
   letter-spacing: 0.3em;
-  color: var(--color-accent-cool);
+  color: var(--sky-1);
   display: block;
   margin-bottom: 1.2rem;
   text-transform: uppercase;
@@ -29,8 +29,9 @@
 .heading em {
   font-family: 'Playfair Display', serif;
   font-style: italic;
-  color: var(--color-accent-cool);
+  color: var(--sky-3);
   font-weight: 700;
+  text-shadow: 0 0 30px color-mix(in srgb, var(--sky-3) 50%, transparent);
 }
 
 .grid {

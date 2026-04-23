@@ -1,16 +1,28 @@
 :root {
-  --color-bg: #050508;
-  --color-surface: #0A0D1A;
-  --color-surface-2: #0F1525;
-  --color-surface-light: #F5F2EC;
-  --color-accent: #FF6500;
-  --color-accent-cool: #4FACFE;
-  --color-fog: #C8B8FF18;
-  --color-text: #F0EDE8;
-  --color-text-dim: #7A7A8C;
-  --color-text-dark: #1A1A22;
+  /* Endless Field at Dusk — dreamcore palette */
+  --sky-1: #C4DFF5;         /* ciano pálido alto */
+  --sky-2: #F5D9B8;         /* horizonte */
+  --sky-3: #E8BCC8;         /* rosa-velho nuvens */
+  --deep-blue: #2D3D5F;     /* azul profundo atmosférico */
+  --cream: #EEE4D1;         /* campo / tile de piscina */
+  --cream-2: #F5EEDC;       /* creme mais claro */
+  --mist: #BFB5D9;          /* violeta névoa */
+  --uncanny: #D94848;       /* vermelho "errado" — só acentos raros */
+  --shadow: #1A1F2E;        /* fundo profundo (não preto) */
+  --shadow-2: #0F1320;      /* mais profundo */
+  --sun: #FFE5A8;           /* sol suave */
+
+  --color-bg: var(--shadow);
+  --color-surface: var(--shadow-2);
+  --color-text: var(--cream);
+  --color-text-dim: #8894B5;
+  --color-text-dark: #1A1F2E;
+  --color-accent: var(--mist);
+  --color-accent-2: var(--sky-3);
+  --color-accent-warm: var(--sun);
 
   --ease-cine: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-dream: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -20,7 +32,7 @@ html, body {
   color: var(--color-text);
 }
 
-html { scroll-behavior: auto; } /* Lenis handles it */
+html { scroll-behavior: auto; }
 
 body {
   font-family: 'Inter', sans-serif;
@@ -49,21 +61,50 @@ button {
 
 img { max-width: 100%; display: block; }
 
-/* Grain overlay */
+/* Heavy film grain overlay */
 body::after {
   content: '';
   position: fixed;
   inset: 0;
   background-image: url('/assets/noise.svg');
-  background-size: 300px 300px;
-  opacity: 0.045;
+  background-size: 220px 220px;
+  opacity: 0.09;
   pointer-events: none;
   z-index: 9999;
   animation: grain 0.5s steps(1) infinite;
   mix-blend-mode: overlay;
 }
 
+/* VHS tracking lines (sutil, constante) */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent 2px,
+    rgba(255, 255, 255, 0.015) 3px,
+    transparent 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+  animation: vhs-drift 8s linear infinite;
+}
+
+@keyframes vhs-drift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+
 ::selection {
-  background: var(--color-accent);
-  color: var(--color-bg);
+  background: var(--mist);
+  color: var(--shadow);
+}
+
+/* Global dreamcore utilities */
+.chromatic {
+  text-shadow:
+    -0.5px 0 0 var(--uncanny),
+    0.5px 0 0 var(--sky-1);
 }
