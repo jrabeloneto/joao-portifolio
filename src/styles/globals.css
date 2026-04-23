@@ -32,15 +32,6 @@ html, body {
   color: var(--color-text);
 }
 
-body {
-  background: transparent;
-}
-
-#root {
-  position: relative;
-  z-index: 1;
-}
-
 html { scroll-behavior: auto; }
 
 body {
