@@ -1,8 +1,9 @@
 .root {
-  background: var(--color-bg);
-  color: var(--color-text);
-  padding: clamp(4rem, 10vw, 9rem) clamp(1.5rem, 6vw, 6rem);
+  background: radial-gradient(ellipse at 20% 100%, color-mix(in srgb, var(--mist) 25%, transparent) 0%, transparent 60%);
+  color: var(--shadow);
+  padding: clamp(6rem, 14vw, 12rem) clamp(1.5rem, 6vw, 6rem);
   min-height: 80vh;
+  position: relative;
 }
 
 .header {
@@ -24,6 +25,8 @@
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(2.5rem, 8vw, 7rem);
   line-height: 0.9;
+  color: var(--shadow);
+  text-shadow: 0 4px 30px color-mix(in srgb, var(--cream) 80%, transparent);
 }
 
 .heading em {
@@ -50,7 +53,8 @@
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.75rem;
   letter-spacing: 0.3em;
-  color: var(--color-text-dim);
+  color: var(--deep-blue);
+  opacity: 0.7;
   text-transform: uppercase;
   font-weight: 400;
 }
@@ -65,11 +69,24 @@
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.8rem;
   padding: 0.55rem 1.1rem;
-  border: 1px solid color-mix(in srgb, var(--color-text-dim) 50%, transparent);
+  border: 1px solid color-mix(in srgb, var(--deep-blue) 35%, transparent);
   border-radius: 100px;
+  background: color-mix(in srgb, var(--cream-2) 70%, transparent);
+  backdrop-filter: blur(8px);
   transition: all 0.3s var(--ease-cine);
   cursor: none;
   letter-spacing: 0.05em;
+  color: var(--shadow);
+  animation: chip-float 6s ease-in-out infinite;
+}
+
+.chip:nth-child(2n) { animation-duration: 8s; animation-delay: -2s; }
+.chip:nth-child(3n) { animation-duration: 7s; animation-delay: -4s; }
+.chip:nth-child(4n) { animation-duration: 9s; animation-delay: -1s; }
+
+@keyframes chip-float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-6px) rotate(0.5deg); }
 }
 
 .chip:hover {

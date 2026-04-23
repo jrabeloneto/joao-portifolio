@@ -1,9 +1,8 @@
 .root {
-  background: var(--color-bg);
-  color: var(--color-text);
-  border-radius: 32px 32px 0 0;
-  padding: clamp(4rem, 10vw, 9rem) clamp(1.5rem, 6vw, 6rem);
-  margin-top: -32px;
+  background:
+    radial-gradient(ellipse at 50% 100%, color-mix(in srgb, var(--shadow) 80%, transparent) 0%, transparent 70%);
+  color: var(--cream);
+  padding: clamp(6rem, 14vw, 12rem) clamp(1.5rem, 6vw, 6rem);
   position: relative;
   z-index: 6;
   min-height: 100vh;

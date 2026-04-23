@@ -1,15 +1,12 @@
 .root {
   background:
-    radial-gradient(ellipse at 80% 0%, color-mix(in srgb, var(--sky-3) 35%, transparent) 0%, transparent 55%),
-    linear-gradient(180deg, var(--cream-2) 0%, var(--cream) 100%);
-  color: var(--color-text-dark);
-  border-radius: 32px 32px 0 0;
-  padding: clamp(4rem, 10vw, 9rem) clamp(1.5rem, 6vw, 6rem);
+    radial-gradient(ellipse at 80% 0%, color-mix(in srgb, var(--cream) 40%, transparent) 0%, transparent 55%);
+  color: var(--shadow);
+  padding: clamp(6rem, 14vw, 12rem) clamp(1.5rem, 6vw, 6rem);
   min-height: 100vh;
   position: relative;
   z-index: 3;
-  margin-top: -32px;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .root::before {
@@ -52,9 +49,10 @@
 .paragraph {
   font-family: 'Playfair Display', serif;
   font-size: clamp(1.2rem, 2.2vw, 2rem);
-  line-height: 1.35;
-  color: var(--color-text-dark);
+  line-height: 1.4;
+  color: var(--shadow);
   margin-bottom: 1.5rem;
+  text-shadow: 0 2px 20px color-mix(in srgb, var(--cream) 80%, transparent);
 }
 
 .paragraph strong { font-weight: 700; }
@@ -80,6 +78,15 @@
 .visualCard {
   width: min(360px, 80%);
   aspect-ratio: 3/4;
+  animation: card-float 7s ease-in-out infinite;
+}
+
+@keyframes card-float {
+  0%, 100% { transform: translateY(0) rotate(0); }
+  50% { transform: translateY(-14px) rotate(-1deg); }
+}
+
+.visualCard {
   background: linear-gradient(135deg, var(--deep-blue) 0%, var(--mist) 65%, var(--sky-3) 120%);
   border-radius: 12px;
   padding: 1.5rem;

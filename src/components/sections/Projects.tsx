@@ -224,7 +224,7 @@ export function Projects() {
 
   return (
     <section className={styles.root} ref={rootRef} id="projects">
-      <header className={styles.header}>
+      <header className={styles.header} data-speed="1.15">
         <span className={styles.kicker}>// 02 — DREAMING GALLERY</span>
         <h2 className={styles.heading}>
           Oito<br />
