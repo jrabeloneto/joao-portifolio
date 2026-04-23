@@ -61,7 +61,7 @@ export function Skills() {
 
   return (
     <section className={styles.root} ref={rootRef} id="skills">
-      <header className={styles.header}>
+      <header className={styles.header} data-speed="1.2">
         <span className={styles.kicker}>// 03 — STACK</span>
         <h2 className={styles.heading}>
           Ferramentas do<br />
@@ -69,8 +69,8 @@ export function Skills() {
         </h2>
       </header>
       <div className={styles.grid}>
-        {GROUPS.map((g) => (
-          <div key={g.title} className={styles.group}>
+        {GROUPS.map((g, i) => (
+          <div key={g.title} className={styles.group} data-speed={0.85 + (i % 3) * 0.1}>
             <h3 className={styles.groupTitle}>{g.title}</h3>
             <div className={styles.chips}>
               {g.items.map((it) => (

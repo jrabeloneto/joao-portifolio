@@ -5,14 +5,15 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background: var(--shadow);
+  background: transparent;
   padding: 0 2rem;
 }
 
 .canvas {
   position: absolute;
   inset: 0;
-  opacity: 1;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .vignette {
@@ -187,6 +188,59 @@
 @keyframes pulse {
   0%, 100% { opacity: 0.75; }
   50% { opacity: 0.35; }
+}
+
+/* ==== Foreground parallax clouds ==== */
+.cloudFg {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(28px);
+  pointer-events: none;
+  z-index: 1;
+  will-change: transform;
+}
+
+.cloudA {
+  top: 12%;
+  left: -5%;
+  width: 45vw;
+  height: 22vh;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.85), rgba(232,188,200,0.5) 50%, transparent 75%);
+  animation: cloud-drift-a 30s ease-in-out infinite;
+}
+.cloudB {
+  top: 70%;
+  right: -8%;
+  width: 55vw;
+  height: 28vh;
+  background: radial-gradient(ellipse at center, rgba(255,252,245,0.9), rgba(191,181,217,0.55) 50%, transparent 75%);
+  animation: cloud-drift-b 42s ease-in-out infinite;
+}
+.cloudC {
+  top: 38%;
+  right: 10%;
+  width: 30vw;
+  height: 16vh;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.75), rgba(196,223,245,0.4) 50%, transparent 75%);
+  animation: cloud-drift-a 26s ease-in-out infinite reverse;
+  animation-delay: -8s;
+}
+.cloudD {
+  top: 82%;
+  left: 8%;
+  width: 38vw;
+  height: 20vh;
+  background: radial-gradient(ellipse at center, rgba(250,242,230,0.8), rgba(232,188,200,0.45) 50%, transparent 75%);
+  animation: cloud-drift-b 34s ease-in-out infinite reverse;
+}
+
+@keyframes cloud-drift-a {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(40px, -10px); }
+}
+@keyframes cloud-drift-b {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-50px, 8px); }
 }
 
 @media (max-width: 768px) {

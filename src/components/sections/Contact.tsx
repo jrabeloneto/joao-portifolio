@@ -41,13 +41,13 @@ export function Contact() {
 
   return (
     <section className={styles.root} ref={rootRef} id="contact">
-      <span className={styles.kicker}>// 05 — CONTATO</span>
-      <h2 className={styles.heading}>
+      <span className={styles.kicker} data-speed="1.15">// 05 — CONTATO</span>
+      <h2 className={styles.heading} data-speed="1.1">
         Vamos construir<br />
         algo <em>incrível?</em>
       </h2>
 
-      <div className={styles.contactRow}>
+      <div className={styles.contactRow} data-speed="0.9">
         <a
           href="mailto:jrabeloneto2@gmail.com"
           className={styles.contactLink}

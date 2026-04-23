@@ -69,7 +69,7 @@ export function Experience() {
 
   return (
     <section className={styles.root} ref={rootRef} id="experience">
-      <header className={styles.header}>
+      <header className={styles.header} data-speed="1.15">
         <span className={styles.kicker}>// 04 — EXPERIÊNCIA</span>
         <h2 className={styles.heading}>
           O caminho<br />
@@ -82,7 +82,7 @@ export function Experience() {
         </svg>
         <ol className={styles.list}>
           {ENTRIES.map((e, i) => (
-            <li key={i} className={styles.entry}>
+            <li key={i} className={styles.entry} data-speed={1 + (i - 1) * 0.08}>
               <span className={styles.dot} />
               <span className={styles.when}>{e.when}</span>
               <h3 className={styles.title}>{e.title}</h3>

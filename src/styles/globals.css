@@ -28,8 +28,17 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html, body {
-  background: var(--color-bg);
+  background: var(--shadow);
   color: var(--color-text);
+}
+
+body {
+  background: transparent;
+}
+
+#root {
+  position: relative;
+  z-index: 1;
 }
 
 html { scroll-behavior: auto; }

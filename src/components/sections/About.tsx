@@ -78,7 +78,7 @@ export function About() {
   return (
     <section className={styles.root} ref={rootRef} id="about">
       <div className={styles.grid}>
-        <div className={styles.left}>
+        <div className={styles.left} data-speed="1.15">
           <span className={styles.kicker}>// 01 — SOBRE</span>
           <p className={styles.paragraph}>
             Software Lead na <strong>AI.OTIK</strong>, de Manaus pro mundo.
@@ -92,7 +92,7 @@ export function About() {
             <span className={styles.highlight}> impossível em possível</span>.
           </p>
         </div>
-        <div className={styles.right} ref={visualRef}>
+        <div className={styles.right} ref={visualRef} data-speed="0.7" data-rotate="4">
           <div className={styles.visualCard}>
             <div className={styles.visualInner}>
               <span className={styles.visualMono}>// fullstack</span>

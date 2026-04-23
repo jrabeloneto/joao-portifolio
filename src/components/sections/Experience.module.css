@@ -1,11 +1,7 @@
 .root {
-  background:
-    radial-gradient(ellipse at 20% 100%, color-mix(in srgb, var(--mist) 30%, transparent) 0%, transparent 60%),
-    linear-gradient(180deg, var(--cream) 0%, var(--cream-2) 60%, var(--sky-2) 100%);
-  color: var(--color-text-dark);
-  border-radius: 32px 32px 0 0;
-  padding: clamp(4rem, 10vw, 9rem) clamp(1.5rem, 6vw, 6rem);
-  margin-top: -32px;
+  background: radial-gradient(ellipse at 80% 50%, color-mix(in srgb, var(--sky-3) 22%, transparent) 0%, transparent 65%);
+  color: var(--shadow);
+  padding: clamp(6rem, 14vw, 12rem) clamp(1.5rem, 6vw, 6rem);
   position: relative;
   z-index: 5;
   min-height: 80vh;
@@ -29,7 +25,8 @@
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(2.5rem, 8vw, 7rem);
   line-height: 0.9;
-  color: var(--color-text-dark);
+  color: var(--shadow);
+  text-shadow: 0 4px 30px color-mix(in srgb, var(--cream) 80%, transparent);
 }
 
 .heading em {
@@ -76,9 +73,27 @@
   border-radius: 50%;
   background: var(--color-accent);
   box-shadow:
-    0 0 0 4px var(--cream),
-    0 0 20px var(--color-accent);
+    0 0 0 4px var(--cream-2),
+    0 0 20px var(--color-accent),
+    0 0 40px color-mix(in srgb, var(--mist) 60%, transparent);
   transform: translateX(3px);
+  animation: dot-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes dot-pulse {
+  0%, 100% { box-shadow: 0 0 0 4px var(--cream-2), 0 0 20px var(--color-accent), 0 0 40px color-mix(in srgb, var(--mist) 60%, transparent); }
+  50% { box-shadow: 0 0 0 4px var(--cream-2), 0 0 35px var(--color-accent), 0 0 80px color-mix(in srgb, var(--mist) 80%, transparent); }
+}
+
+.entry {
+  animation: entry-sway 9s ease-in-out infinite;
+}
+.entry:nth-child(2n) { animation-duration: 11s; animation-delay: -3s; }
+.entry:nth-child(3n) { animation-duration: 13s; animation-delay: -5s; }
+
+@keyframes entry-sway {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(6px); }
 }
 
 .when {

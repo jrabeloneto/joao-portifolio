@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { HeroScene } from '../three/HeroScene';
 import styles from './Hero.module.css';
 
 const ROLES = ['React & Node', 'Three.js & 3D Web', 'Angular & Spring Boot'];
@@ -22,8 +21,9 @@ export function Hero() {
       gsap.from(`.${styles.titleLine}`, {
         yPercent: 110,
         opacity: 0,
-        stagger: 0.12,
-        duration: 1.2,
+        filter: 'blur(20px)',
+        stagger: 0.14,
+        duration: 1.4,
         ease: 'power4.out',
         delay: 0.3,
       });
@@ -42,12 +42,6 @@ export function Hero() {
         stagger: 0.1,
         ease: 'power2.out',
       });
-      gsap.from(`.${styles.canvas}`, {
-        opacity: 0,
-        duration: 2,
-        delay: 0.6,
-        ease: 'power2.out',
-      });
       gsap.from(`.${styles.kicker}, .${styles.cornerMeta}`, {
         opacity: 0,
         duration: 1,
@@ -60,14 +54,15 @@ export function Hero() {
 
   return (
     <section className={styles.root} ref={rootRef}>
-      <div className={styles.canvas}>
-        <HeroScene />
-      </div>
-      <div className={styles.vignette} aria-hidden />
+      {/* decorative floating cloud puffs — sit in front, parallax at different speeds */}
+      <span className={`${styles.cloudFg} ${styles.cloudA}`} data-speed="0.55" aria-hidden />
+      <span className={`${styles.cloudFg} ${styles.cloudB}`} data-speed="0.7" aria-hidden />
+      <span className={`${styles.cloudFg} ${styles.cloudC}`} data-speed="1.3" aria-hidden />
+      <span className={`${styles.cloudFg} ${styles.cloudD}`} data-speed="1.5" aria-hidden />
 
-      <span className={styles.kicker}>// portfolio · v2 · 2026</span>
+      <span className={styles.kicker} data-speed="1.2">// portfolio · v2 · 2026</span>
 
-      <div className={styles.content}>
+      <div className={styles.content} data-speed="1.1">
         <h1 className={styles.title}>
           <span className={styles.lineWrap}>
             <span className={styles.titleLine}>JOÃO</span>
@@ -90,7 +85,7 @@ export function Hero() {
         </a>
       </div>
 
-      <div className={styles.cornerMeta}>
+      <div className={styles.cornerMeta} data-speed="1.3">
         <span>lat −3.1190</span>
         <span>lng −60.0217</span>
         <span>AM · BR</span>
