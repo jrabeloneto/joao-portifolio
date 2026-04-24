@@ -64,7 +64,11 @@ export function Overlays() {
   const houseOp = envelope(p, CH.house[0], CH.house[1], F);
   // Contact terminal fades in only once camera is clearly INSIDE the room —
   // avoids the terminal floating over the house exterior during entry.
-  const terminalOp = envelope(p, CH.house[0] + 0.015, CH.house[1], 0.015);
+  // Terminal waits until camera is fully inside the room and at the desk.
+  // Camera crosses the room front wall around p≈0.96 in the rapid-entry
+  // curve (see CameraRig). Start terminal fade after that so the overlay
+  // only appears once the monitor is actually in front of the camera.
+  const terminalOp = envelope(p, CH.house[0] + 0.025, CH.house[1], 0.008);
 
   const projLocal = range(p, CH.projects[0], CH.projects[1]);
   const projIdx = Math.min(projects.length - 1, Math.round(projLocal * (projects.length - 1)));
