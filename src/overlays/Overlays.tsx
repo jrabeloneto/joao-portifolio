@@ -15,7 +15,9 @@ function useScroll() {
 }
 
 function chapterStyle(op: number, extra: React.CSSProperties = {}): React.CSSProperties {
-  return { opacity: op, pointerEvents: op > 0.5 ? 'auto' : 'none', ...extra };
+  // pointer-events handled by CSS (layer = none, children = auto) so canvas
+  // always receives raycasts for skill points / moon / eyes.
+  return { opacity: op, ...extra };
 }
 
 const ROLES = ['React & Node', 'Three.js & 3D Web', 'Angular & Spring Boot', 'Design Systems'];

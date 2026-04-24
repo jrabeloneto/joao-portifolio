@@ -494,12 +494,21 @@ function TimelineTrail() {
 function StormClouds() {
   const group = useRef<THREE.Group>(null!);
   const clouds = useMemo(() => {
-    const arr: { pos: [number, number, number]; scale: number; speed: number }[] = [];
-    for (let i = 0; i < 25; i++) {
+    const arr: { pos: [number, number, number]; scale: number; speed: number; tint: string }[] = [];
+    // Dense layered storm clouds — fill the whole viewport during storm chapter.
+    // Camera sits near z=-450, so clouds are spread from -420 (behind) to -490 (ahead).
+    for (let i = 0; i < 55; i++) {
+      const layer = i % 3;           // 0 front, 1 mid, 2 back
+      const zBase = -425 - layer * 22;
       arr.push({
-        pos: [(Math.random() - 0.5) * 80, -2 + Math.random() * 10, -440 - i * 4],
-        scale: 10 + Math.random() * 14,
-        speed: 0.3 + Math.random() * 0.8,
+        pos: [
+          (Math.random() - 0.5) * 120,
+          -6 + Math.random() * 16,
+          zBase + (Math.random() - 0.5) * 20,
+        ],
+        scale: 14 + Math.random() * 24,
+        speed: 0.2 + Math.random() * 0.6,
+        tint: layer === 0 ? '#1d1d26' : layer === 1 ? '#141420' : '#0a0a14',
       });
     }
     return arr;
@@ -510,75 +519,114 @@ function StormClouds() {
       group.current.visible = op > 0.01;
       group.current.children.forEach((c) => {
         const m = (c as THREE.Mesh).material as THREE.ShaderMaterial;
-        if (m && m.uniforms.uOpacity) m.uniforms.uOpacity.value = op * 0.9;
+        if (m && m.uniforms.uOpacity) m.uniforms.uOpacity.value = op * 0.95;
       });
     }
   });
   return (
     <group ref={group}>
       {clouds.map((c, i) => (
-        <Cloud key={i} pos={c.pos} scale={c.scale} speed={c.speed} tint="#1a1a22" opacity={0.85} />
+        <Cloud key={i} pos={c.pos} scale={c.scale} speed={c.speed} tint={c.tint} opacity={0.9} />
       ))}
     </group>
   );
 }
 
-/** Weirdcore eyes that flash into view when lightning strikes */
+/** Weirdcore eyes — ALWAYS present during storm, hidden deep in the clouds,
+ * their pupils track the cursor. Lightning brightens them briefly. */
 function StormEyes() {
   const group = useRef<THREE.Group>(null!);
   const eyes = useMemo(() => {
-    const arr: { pos: [number, number, number]; scale: number }[] = [];
-    for (let i = 0; i < 12; i++) {
+    const arr: { pos: [number, number, number]; scale: number; baseOp: number; tilt: number }[] = [];
+    // Scatter eyes at multiple depths, embedded amongst storm clouds.
+    for (let i = 0; i < 16; i++) {
       arr.push({
-        pos: [(Math.random() - 0.5) * 60, -3 + Math.random() * 10, -445 - Math.random() * 30],
-        scale: 0.8 + Math.random() * 1.4,
+        pos: [
+          (Math.random() - 0.5) * 70,
+          -4 + Math.random() * 13,
+          -432 - Math.random() * 45,
+        ],
+        scale: 0.7 + Math.random() * 1.3,
+        baseOp: 0.22 + Math.random() * 0.35, // always at least faintly visible
+        tilt: (Math.random() - 0.5) * 0.4,
       });
     }
     return arr;
   }, []);
-  const flashIntensity = useRef(0);
+  const flashI = useRef(0);
   const flashNext = useRef(0);
-  useFrame((_, dt) => {
+  const tmpVec = useMemo(() => new THREE.Vector3(), []);
+  useFrame((state, dt) => {
     const p = scrollState.progress;
     const stormOp = envelope(p, CH.storm[0], CH.storm[1], 0.03);
-    if (group.current) {
-      group.current.visible = stormOp > 0.05;
-      if (stormOp > 0.05) {
-        const now = performance.now() / 1000;
-        if (now > flashNext.current) {
-          flashIntensity.current = 1;
-          flashNext.current = now + 0.9 + Math.random() * 2.2;
-        }
-        flashIntensity.current = Math.max(0, flashIntensity.current - dt * 3.5);
-        group.current.children.forEach((c, i) => {
-          const iris = c.children[1] as THREE.Mesh | undefined;
-          const sclera = c.children[0] as THREE.Mesh | undefined;
-          const pupil = c.children[2] as THREE.Mesh | undefined;
-          const vis = flashIntensity.current * (0.4 + 0.6 * Math.sin(i * 1.3 + now * 2));
-          [iris, sclera, pupil].forEach((m) => {
-            if (!m) return;
-            const mat = m.material as THREE.MeshBasicMaterial;
-            if (mat) mat.opacity = Math.max(0, vis) * stormOp;
-          });
-        });
-      }
+    if (!group.current) return;
+    group.current.visible = stormOp > 0.01;
+    if (stormOp <= 0.01) return;
+
+    // Lightning boost — brief full reveal
+    const now = performance.now() / 1000;
+    if (now > flashNext.current) {
+      flashI.current = 1;
+      flashNext.current = now + 1.0 + Math.random() * 2.2;
     }
+    flashI.current = Math.max(0, flashI.current - dt * 3.5);
+
+    const cam = state.camera as THREE.PerspectiveCamera;
+
+    group.current.children.forEach((c, i) => {
+      const eye = eyes[i];
+      const sclera = c.children[0] as THREE.Mesh;
+      const iris = c.children[1] as THREE.Mesh;
+      const pupil = c.children[2] as THREE.Mesh;
+
+      // Baseline opacity (breathing) + lightning boost
+      const breathe = 0.85 + 0.15 * Math.sin(state.clock.elapsedTime * 1.2 + i);
+      const baseOp = eye.baseOp * breathe;
+      const flashBoost = flashI.current * (1 - eye.baseOp);
+      const finalOp = (baseOp + flashBoost) * stormOp;
+
+      [sclera, iris, pupil].forEach((m) => {
+        if (!m) return;
+        const mat = m.material as THREE.MeshBasicMaterial;
+        if (mat) mat.opacity = Math.min(1, finalOp);
+      });
+
+      // Pupil tracking — project screen-space mouse into this eye's plane,
+      // clamp the iris/pupil offset within the sclera.
+      tmpVec.set(scrollState.mouseX, scrollState.mouseY, 0.5).unproject(cam);
+      const dir = tmpVec.sub(cam.position).normalize();
+      if (Math.abs(dir.z) < 0.001) return;
+      const t = (eye.pos[2] - cam.position.z) / dir.z;
+      const wx = cam.position.x + dir.x * t;
+      const wy = cam.position.y + dir.y * t;
+      const dx = wx - eye.pos[0];
+      const dy = wy - eye.pos[1];
+      const mag = Math.sqrt(dx * dx + dy * dy);
+      const max = 0.32 / eye.scale; // in local-space units before scale
+      const nx = mag > 0 ? (dx / mag) * Math.min(max, mag * 0.08) : 0;
+      const ny = mag > 0 ? (dy / mag) * Math.min(max, mag * 0.08) : 0;
+      // Smooth toward target
+      iris.position.x += (nx - iris.position.x) * Math.min(dt * 6, 1);
+      iris.position.y += (ny - iris.position.y) * Math.min(dt * 6, 1);
+      pupil.position.x = iris.position.x;
+      pupil.position.y = iris.position.y;
+    });
   });
   return (
     <group ref={group}>
       {eyes.map((e, i) => (
-        <group key={i} position={e.pos} scale={e.scale} rotation={[0, 0, (Math.random() - 0.5) * 0.4]}>
+        <group key={i} position={e.pos} scale={e.scale} rotation={[0, 0, e.tilt]}>
           <mesh>
             <circleGeometry args={[1, 32]} />
-            <meshBasicMaterial color="#e8e8e0" transparent opacity={0} toneMapped={false} />
+            <meshBasicMaterial color="#d8c8a8" transparent opacity={0} toneMapped={false} />
           </mesh>
           <mesh position={[0, 0, 0.01]}>
-            <circleGeometry args={[0.55, 32]} />
-            <meshBasicMaterial color="#1a1a22" transparent opacity={0} toneMapped={false} />
+            <circleGeometry args={[0.5, 32]} />
+            <meshBasicMaterial color="#3a1818" transparent opacity={0} toneMapped={false} />
           </mesh>
           <mesh position={[0, 0, 0.02]}>
-            <circleGeometry args={[0.22, 32]} />
-            <meshBasicMaterial color="#000" transparent opacity={0} toneMapped={false} />
+            <circleGeometry args={[0.2, 32]} />
+            <meshBasicMaterial color="#000000" transparent opacity={0} toneMapped={false} />
           </mesh>
         </group>
       ))}
@@ -649,31 +697,30 @@ function StormMoon() {
     if (group.current) group.current.visible = op > 0.01;
 
     // Project mouse (NDC -1..1) into the moon plane UV space (0..1).
-    // Moon is big (scale ~8) and positioned ahead of camera; project screen mouse
-    // to world at the moon's z, then convert to local uv of the plane.
-    const moonWorldZ = -455;
-    const moonSize = 8; // plane is 8x8, half-extent 4
+    // Moon center must match the <group> position below, or cursor never hits.
+    const moonX = 0;
+    const moonY = 2.8;
+    const moonWorldZ = -458;
+    const moonSize = 10; // plane is 10x10
     const cam = state.camera as THREE.PerspectiveCamera;
     const vec = new THREE.Vector3(scrollState.mouseX, scrollState.mouseY, 0.5).unproject(cam);
     const dir = vec.sub(cam.position).normalize();
-    // distance along ray to reach the moon's z-plane
-    const t = (moonWorldZ - cam.position.z) / dir.z;
-    const worldHitX = cam.position.x + dir.x * t;
-    const worldHitY = cam.position.y + dir.y * t;
-    // moon center world (matches group position below)
-    const moonX = 0;
-    const moonY = 5;
-    const localU = (worldHitX - moonX) / moonSize + 0.5;
-    const localV = (worldHitY - moonY) / moonSize + 0.5;
-    uniforms.uMouse.value.set(localU, localV);
-    const inside = localU > -0.2 && localU < 1.2 && localV > -0.2 && localV < 1.2 ? 1 : 0;
-    uniforms.uMouseInside.value += (inside - uniforms.uMouseInside.value) * Math.min(dt * 8, 1);
+    if (Math.abs(dir.z) > 0.001) {
+      const t = (moonWorldZ - cam.position.z) / dir.z;
+      const worldHitX = cam.position.x + dir.x * t;
+      const worldHitY = cam.position.y + dir.y * t;
+      const localU = (worldHitX - moonX) / moonSize + 0.5;
+      const localV = (worldHitY - moonY) / moonSize + 0.5;
+      uniforms.uMouse.value.set(localU, localV);
+      const inside = localU > -0.3 && localU < 1.3 && localV > -0.3 && localV < 1.3 ? 1 : 0;
+      uniforms.uMouseInside.value += (inside - uniforms.uMouseInside.value) * Math.min(dt * 8, 1);
+    }
   });
 
   return (
-    <group ref={group} position={[0, 5, -455]}>
+    <group ref={group} position={[0, 2.8, -458]}>
       <mesh>
-        <planeGeometry args={[8, 8]} />
+        <planeGeometry args={[10, 10]} />
         <shaderMaterial
           uniforms={uniforms}
           vertexShader={cloudVert}
@@ -685,7 +732,7 @@ function StormMoon() {
       </mesh>
       {/* Additive glow halo — bigger, softer, also reacts via same uniforms */}
       <mesh position={[0, 0, -0.1]}>
-        <planeGeometry args={[16, 16]} />
+        <planeGeometry args={[20, 20]} />
         <shaderMaterial
           uniforms={uniforms}
           vertexShader={cloudVert}
@@ -775,16 +822,19 @@ function GrassField() {
   }), []);
   useFrame((_, dt) => {
     uniforms.uTime.value += dt;
-    const op = envelope(scrollState.progress, CH.field[0], 1.0, 0.04);
+    // Start fading grass in late storm so the descent feels like the clouds part.
+    const op = envelope(scrollState.progress, CH.field[0] - 0.02, 1.0, 0.05);
     uniforms.uOpacity.value = op;
     if (ref.current) ref.current.visible = op > 0.01;
   });
   return (
-    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -6, -520]}>
-      <planeGeometry args={[200, 180, 1, 1]} />
+    // Huge ground plane, centered ahead of the field camera path and extending far.
+    <mesh ref={ref} rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.5, -540]}>
+      <planeGeometry args={[800, 800, 1, 1]} />
       <shaderMaterial
         uniforms={uniforms}
         transparent
+        depthWrite={false}
         vertexShader={`varying vec2 vUv; void main(){ vUv=uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`}
         fragmentShader={`
           uniform float uTime;
@@ -793,16 +843,25 @@ function GrassField() {
           float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
           float noise(vec2 p){vec2 i=floor(p);vec2 f=fract(p);f=f*f*(3.0-2.0*f);
             return mix(mix(hash(i),hash(i+vec2(1,0)),f.x),mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),f.x),f.y);}
+          float fbm(vec2 p){float v=0.0;float a=0.5;for(int i=0;i<4;i++){v+=a*noise(p);p*=2.0;a*=0.5;}return v;}
           void main(){
             vec2 uv = vUv;
-            float n = noise(uv * 200.0 + uTime * 0.1);
-            float n2 = noise(uv * 40.0);
-            vec3 grass = mix(vec3(0.28, 0.55, 0.22), vec3(0.55, 0.75, 0.28), n2);
-            grass += (n - 0.5) * 0.08;
-            // horizon fade
-            float h = smoothstep(0.4, 0.9, 1.0 - uv.y);
-            grass = mix(grass, vec3(0.75, 0.88, 0.95), h * 0.7);
-            gl_FragColor = vec4(grass, uOpacity);
+            // Distance from center of plane → for horizon fade (plane is aligned to XZ world)
+            float dist = distance(uv, vec2(0.5));
+            float blades = noise(uv * 600.0 + uTime * 0.3);
+            float patches = fbm(uv * 18.0);
+            vec3 grassDark = vec3(0.18, 0.42, 0.16);
+            vec3 grassLight = vec3(0.52, 0.78, 0.30);
+            vec3 grass = mix(grassDark, grassLight, patches);
+            grass += (blades - 0.5) * 0.10;
+            // soft darker patches (tree shadows-ish) + sunny spots
+            grass *= 0.85 + 0.3 * fbm(uv * 6.0 + 3.0);
+            // blend to horizon/sky blue at the plane's outer ring
+            vec3 horizon = vec3(0.78, 0.88, 0.96);
+            float fade = smoothstep(0.30, 0.50, dist);
+            grass = mix(grass, horizon, fade * 0.95);
+            float alpha = uOpacity * (1.0 - smoothstep(0.48, 0.50, dist) * 0.0);
+            gl_FragColor = vec4(grass, alpha);
           }
         `}
       />
@@ -813,19 +872,20 @@ function GrassField() {
 function House() {
   const group = useRef<THREE.Group>(null!);
   useFrame(() => {
-    const op = envelope(scrollState.progress, CH.field[0], 1.0, 0.04);
+    const op = envelope(scrollState.progress, CH.field[0] - 0.01, CH.house[0] + 0.01, 0.04);
     if (group.current) {
       group.current.visible = op > 0.01;
-      group.current.children.forEach((c) => {
-        const mesh = c as THREE.Mesh;
-        const m = mesh.material as THREE.MeshStandardMaterial;
-        if (m) m.opacity = op;
+      group.current.traverse((o) => {
+        const mesh = o as THREE.Mesh;
+        const m = mesh.material as THREE.MeshStandardMaterial | undefined;
+        if (m && 'opacity' in m) m.opacity = op;
       });
     }
   });
   return (
-    // House sits on a hill (raised on y) in front of camera final position (~-560)
-    <group ref={group} position={[0, -4.8, -545]} scale={1.5}>
+    // House on a grassy hill, far enough ahead that the descending camera
+    // arrives at its porch by the end of the field chapter.
+    <group ref={group} position={[0, -0.2, -548]} scale={2.2}>
       {/* walls */}
       <mesh position={[0, 1.5, 0]}>
         <boxGeometry args={[6, 3, 5]} />
@@ -899,26 +959,50 @@ function ContactMonitor() {
 
 function CameraRig() {
   const { camera } = useThree();
-  const current = useRef({ z: 5, x: 0, y: 0.3, rotZ: 0 });
+  const current = useRef({ z: 5, x: 0, y: 0.3, rotZ: 0, lookY: 0 });
+  const lookVec = useMemo(() => new THREE.Vector3(), []);
   useFrame((_, dt) => {
     const p = scrollState.progress;
     const targetZ = cameraZAt(p);
-    // During field chapter, camera descends (y goes negative to positive — simulating from sky to ground)
-    const fieldLocal = range(p, CH.field[0], CH.field[1]);
+
+    const baseX = scrollState.mouseX * 0.5;
     const baseY = 0.3 + scrollState.mouseY * 0.25;
-    const descentY = baseY + (1 - fieldLocal) * 8 * envelope(p, CH.field[0], CH.field[1], 0.02);
-    const targetY = p > CH.field[0] ? descentY : baseY;
-    const targetX = scrollState.mouseX * 0.5;
+
+    // Default targets — used for chapters up through storm.
+    let targetY = baseY;
+    let targetLookY = baseY * 0.3;
+
+    // FIELD: smooth descent from sky (y≈6) to ground-walking (y≈1.3).
+    if (p >= CH.field[0] - 0.01 && p < CH.house[0]) {
+      const d = Math.min(1, Math.max(0, (p - (CH.field[0] - 0.01)) / (CH.field[1] - (CH.field[0] - 0.01))));
+      const skyY = 6.5;
+      const groundY = 1.3;
+      // ease-out cubic for natural falling feel
+      const ease = 1 - Math.pow(1 - d, 3);
+      targetY = skyY + (groundY - skyY) * ease + scrollState.mouseY * 0.15;
+      // Look toward the house on the horizon as we descend.
+      targetLookY = skyY - ease * 5.5;
+    }
+
+    // HOUSE: seated at computer — camera mostly still, slight parallax.
+    if (p >= CH.house[0]) {
+      const h = range(p, CH.house[0], CH.house[1]);
+      targetY = 1.0 + h * 0.15 + scrollState.mouseY * 0.08;
+      targetLookY = 1.0 + scrollState.mouseY * 0.05;
+    }
+
     const targetRotZ = Math.sin(p * Math.PI * 2) * 0.04 + scrollState.mouseX * 0.04;
 
     const k = Math.min(dt * 2.8, 1);
     current.current.z += (targetZ - current.current.z) * k;
-    current.current.x += (targetX - current.current.x) * k;
+    current.current.x += (baseX - current.current.x) * k;
     current.current.y += (targetY - current.current.y) * k;
     current.current.rotZ += (targetRotZ - current.current.rotZ) * k;
+    current.current.lookY += (targetLookY - current.current.lookY) * k;
 
     camera.position.set(current.current.x, current.current.y, current.current.z);
-    camera.lookAt(current.current.x * 0.3, current.current.y * 0.3 - fieldLocal * 2, current.current.z - 10);
+    lookVec.set(current.current.x * 0.3, current.current.lookY, current.current.z - 10);
+    camera.lookAt(lookVec);
     camera.rotation.z = current.current.rotZ;
   });
   return null;

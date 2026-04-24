@@ -12,6 +12,14 @@
   color: var(--cream);
   transition: opacity 0.6s ease-out;
   will-change: opacity, transform;
+  /* NEVER block pointer events at the layer level — canvas needs to receive hover.
+     Individual interactive children re-enable pointer-events below. */
+  pointer-events: none;
+}
+
+.layer a, .layer button,
+.layerBottom a, .layerBottom button {
+  pointer-events: auto;
 }
 
 .layerBottom {
