@@ -1,0 +1,395 @@
+/* Fixed-viewport overlays stacked on top of the DreamCanvas.
+   Each .layer is a fullscreen centered block that fades in/out via inline opacity
+   driven by its chapter's envelope. */
+
+.layer, .layerBottom {
+  position: fixed;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: clamp(2rem, 6vw, 7rem) clamp(1.5rem, 6vw, 6rem);
+  color: var(--cream);
+  transition: opacity 0.6s ease-out;
+  will-change: opacity, transform;
+}
+
+.layerBottom {
+  justify-content: flex-end;
+  padding-bottom: clamp(3rem, 8vw, 8rem);
+}
+
+/* ------------- shared bits ------------- */
+
+.kicker {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cream) 70%, transparent);
+  margin-bottom: 2rem;
+  text-shadow: 0 0 20px color-mix(in srgb, var(--shadow) 80%, transparent);
+}
+
+.h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 10vw, 10rem);
+  line-height: 0.88;
+  margin-bottom: 2rem;
+  letter-spacing: 0.01em;
+  text-shadow:
+    0 2px 20px rgba(0, 0, 0, 0.6),
+    0 0 60px color-mix(in srgb, var(--mist) 40%, transparent);
+}
+
+.h2 em {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  color: #ffe5a8;
+  font-weight: 700;
+  text-shadow: 0 0 40px color-mix(in srgb, #ffd08a 70%, transparent);
+}
+
+/* ------------- HERO ------------- */
+
+.heroTitle {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5rem, 18vw, 18rem);
+  line-height: 0.82;
+  letter-spacing: -0.01em;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 2rem;
+  text-shadow:
+    0 4px 30px rgba(0, 0, 0, 0.7),
+    0 0 80px color-mix(in srgb, #ffe5a8 35%, transparent);
+}
+
+.heroSub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  color: color-mix(in srgb, var(--cream) 85%, transparent);
+  margin-bottom: 2.2rem;
+  text-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+}
+
+.roles {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+}
+
+.rolesLabel {
+  color: color-mix(in srgb, var(--cream) 55%, transparent);
+  letter-spacing: 0.15em;
+}
+
+.role {
+  color: #ffe5a8;
+  letter-spacing: 0.06em;
+  animation: role-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  text-shadow: 0 0 20px color-mix(in srgb, #ffe5a8 70%, transparent);
+}
+
+@keyframes role-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); filter: blur(6px); }
+  to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+}
+
+.scrollHint {
+  position: absolute;
+  bottom: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cream) 65%, transparent);
+  animation: scroll-pulse 2.4s ease-in-out infinite;
+}
+
+.scrollLine {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(180deg, var(--cream), transparent);
+}
+
+@keyframes scroll-pulse {
+  0%, 100% { transform: translate(-50%, 0); opacity: 0.6; }
+  50%      { transform: translate(-50%, 8px); opacity: 1; }
+}
+
+/* ------------- ABOUT ------------ */
+
+.paragraph {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.2rem, 2.2vw, 1.9rem);
+  line-height: 1.5;
+  max-width: 44ch;
+  color: var(--cream);
+  text-shadow: 0 2px 20px rgba(0, 0, 0, 0.6);
+}
+
+.paragraph strong { font-weight: 700; color: #ffe5a8; }
+.paragraph em { font-style: italic; color: #ffe5a8; }
+
+.stats {
+  margin-top: 3rem;
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.stats > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cream) 65%, transparent);
+}
+
+.statNum {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 4rem);
+  color: #ffe5a8;
+  letter-spacing: 0.02em;
+  text-shadow: 0 0 30px color-mix(in srgb, #ffe5a8 60%, transparent);
+}
+
+/* ------------- PROJECTS -------- */
+
+.projName {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 8vw, 7rem);
+  line-height: 0.88;
+  letter-spacing: 0.02em;
+  animation: proj-swap 0.5s ease-out both;
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.7), 0 0 60px color-mix(in srgb, var(--mist) 30%, transparent);
+}
+
+@keyframes proj-swap {
+  from { opacity: 0; transform: translateY(20px); filter: blur(8px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+.projTag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #ffe5a8;
+  margin-top: 0.5rem;
+}
+
+.projDesc {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: 56ch;
+  margin-top: 1rem;
+  color: color-mix(in srgb, var(--cream) 88%, transparent);
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+}
+
+.projStack {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--mist) 45%, transparent);
+  background: color-mix(in srgb, #000 45%, transparent);
+  backdrop-filter: blur(8px);
+  border-radius: 2px;
+  letter-spacing: 0.1em;
+  color: color-mix(in srgb, var(--cream) 90%, transparent);
+}
+
+.projLinks {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+}
+
+.projLinks a {
+  color: #ffe5a8;
+  border-bottom: 1px solid color-mix(in srgb, #ffe5a8 50%, transparent);
+  padding-bottom: 0.3rem;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 20px color-mix(in srgb, #ffe5a8 50%, transparent);
+}
+
+.projLinks a:hover {
+  border-color: #ffe5a8;
+  letter-spacing: 0.3em;
+}
+
+/* ------------- SKILLS ---------- */
+
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  max-width: 1000px;
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.skillsGrid h4 {
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #ffe5a8;
+  margin-bottom: 0.8rem;
+}
+
+.skillsGrid span {
+  font-size: 0.9rem;
+  line-height: 1.8;
+  color: color-mix(in srgb, var(--cream) 85%, transparent);
+  text-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+}
+
+/* ------------- EXPERIENCE ----- */
+
+.timeline {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 700px;
+  padding-left: 1.8rem;
+  border-left: 1px solid color-mix(in srgb, #ffe5a8 40%, transparent);
+}
+
+.timeline li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  position: relative;
+}
+
+.timeline li::before {
+  content: '';
+  position: absolute;
+  left: -2rem;
+  top: 0.4rem;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ffe5a8;
+  box-shadow: 0 0 20px #ffe5a8, 0 0 40px color-mix(in srgb, #ffd08a 60%, transparent);
+}
+
+.when {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: #ffe5a8;
+}
+
+.role2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  letter-spacing: 0.02em;
+}
+
+.where {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: color-mix(in srgb, var(--cream) 75%, transparent);
+}
+
+/* ------------- CONTACT -------- */
+
+.contactLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.95rem;
+  margin-bottom: 4rem;
+}
+
+.contactLinks a {
+  color: var(--cream);
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid color-mix(in srgb, var(--cream) 40%, transparent);
+  transition: all 0.3s ease;
+  width: fit-content;
+}
+
+.contactLinks a:hover {
+  color: #ffe5a8;
+  border-color: #ffe5a8;
+  letter-spacing: 0.08em;
+  text-shadow: 0 0 20px color-mix(in srgb, #ffe5a8 60%, transparent);
+}
+
+.footer {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--cream) 55%, transparent);
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+/* ------------- PROGRESS BAR -- */
+
+.progress {
+  position: fixed;
+  right: 2rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  transform-origin: right center;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: color-mix(in srgb, var(--cream) 65%, transparent);
+  pointer-events: none;
+}
+
+.progressBar {
+  width: 120px;
+  height: 1px;
+  background: linear-gradient(90deg, #ffe5a8, transparent);
+  transform-origin: left center;
+  transition: transform 0.15s linear;
+}
+
+/* ------------- mobile --------- */
+
+@media (max-width: 780px) {
+  .layer, .layerBottom { padding: 2rem 1.5rem; }
+  .progress { display: none; }
+  .scrollHint { bottom: 1.5rem; }
+}
