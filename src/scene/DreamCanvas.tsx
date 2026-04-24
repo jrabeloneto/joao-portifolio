@@ -703,15 +703,14 @@ function StormMoon() {
     uniforms.uOpacity.value = op;
     if (group.current) group.current.visible = op > 0.01;
 
-    // Project mouse (NDC -1..1) into the moon plane UV space (0..1).
-    // Moon center must match the <group> position below, or cursor never hits.
-    // Camera is around z=-450 during storm, so moon sits ahead at z=-462, with
-    // all storm clouds pushed farther than that so none occlude the moon.
+    const cam = state.camera as THREE.PerspectiveCamera;
+    // MOON FOLLOWS CAMERA — always 20 units ahead so it's never behind the
+    // camera regardless of where we are inside the storm scroll range.
     const moonX = 0;
     const moonY = 3.2;
-    const moonWorldZ = -462;
+    const moonWorldZ = cam.position.z - 20;
     const moonSize = 11;
-    const cam = state.camera as THREE.PerspectiveCamera;
+    if (group.current) group.current.position.set(moonX, moonY, moonWorldZ);
     const vec = new THREE.Vector3(scrollState.mouseX, scrollState.mouseY, 0.5).unproject(cam);
     const dir = vec.sub(cam.position).normalize();
     if (Math.abs(dir.z) > 0.001) {
@@ -871,10 +870,11 @@ function GrassField() {
             grass += (blades - 0.5) * 0.10;
             // soft darker patches (tree shadows-ish) + sunny spots
             grass *= 0.85 + 0.3 * fbm(uv * 6.0 + 3.0);
-            // blend to horizon/sky blue at the plane's outer ring
+            // blend to horizon/sky blue at the plane's outer ring — kept
+            // narrow so most of the plane stays green (field feels infinite).
             vec3 horizon = vec3(0.78, 0.88, 0.96);
-            float fade = smoothstep(0.30, 0.50, dist);
-            grass = mix(grass, horizon, fade * 0.95);
+            float fade = smoothstep(0.42, 0.50, dist);
+            grass = mix(grass, horizon, fade * 0.98);
             float alpha = uOpacity * (1.0 - smoothstep(0.48, 0.50, dist) * 0.0);
             gl_FragColor = vec4(grass, alpha);
           }
@@ -887,8 +887,9 @@ function GrassField() {
 function House() {
   const group = useRef<THREE.Group>(null!);
   useFrame(() => {
-    // Keep house visible through field AND house chapters (we walk up to it).
-    const op = envelope(scrollState.progress, CH.storm[1] - 0.01, CH.house[1], 0.04);
+    // Visible as we descend + approach during field; fades out as we "enter"
+    // at the start of the house chapter so the interior can take over.
+    const op = envelope(scrollState.progress, CH.storm[1] - 0.01, CH.house[0] + 0.005, 0.035);
     if (group.current) {
       group.current.visible = op > 0.01;
       group.current.traverse((o) => {
@@ -901,12 +902,7 @@ function House() {
   return (
     // House on a grassy hill, far enough ahead that the descending camera
     // arrives at its porch by the end of the field chapter.
-    <group ref={group} position={[0, -0.2, -548]} scale={2.2}>
-      {/* hill mound — cone stretched, grass-colored */}
-      <mesh position={[0, -1.4, 0]} scale={[3.5, 1.0, 3.2]}>
-        <sphereGeometry args={[2.5, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
-        <meshStandardMaterial color="#3c6b24" roughness={0.95} transparent />
-      </mesh>
+    <group ref={group} position={[0, -1.3, -548]} scale={2.2}>
       {/* walls */}
       <mesh position={[0, 1.5, 0]}>
         <boxGeometry args={[6, 3, 5]} />
@@ -940,36 +936,167 @@ function House() {
   );
 }
 
-/** Inside-house computer monitor with contact info glowing */
-function ContactMonitor() {
-  const ref = useRef<THREE.Group>(null!);
-  const matRef = useRef<THREE.MeshBasicMaterial>(null!);
+/** Wide, shallow grassy hill under + behind the house — does NOT block the door. */
+function Hill() {
+  const ref = useRef<THREE.Mesh>(null!);
   useFrame(() => {
-    const op = envelope(scrollState.progress, CH.house[0], CH.house[1], 0.02);
+    const op = envelope(scrollState.progress, CH.storm[1] - 0.01, CH.house[0] + 0.02, 0.04);
     if (ref.current) {
       ref.current.visible = op > 0.01;
+      const m = ref.current.material as THREE.MeshStandardMaterial;
+      if (m) m.opacity = op;
     }
-    if (matRef.current) matRef.current.opacity = op;
   });
   return (
-    <group ref={ref} position={[0, 0, -565]}>
-      {/* dark room backdrop */}
-      <mesh position={[0, 0, -2]}>
-        <planeGeometry args={[50, 30]} />
-        <meshBasicMaterial color="#100a05" transparent opacity={0.9} />
+    // Half-sphere, wide and short, centered slightly BEHIND the house so the
+    // door stays visible. Hill edge stops before the house's front wall.
+    <mesh
+      ref={ref}
+      position={[0, -1.8, -552]}
+      scale={[9, 0.7, 8]}
+    >
+      <sphereGeometry args={[1, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+      <meshStandardMaterial color="#3e6e22" roughness={1} transparent />
+    </mesh>
+  );
+}
+
+/** White fluffy clouds scattered across the blue sky during the field chapter. */
+function FieldClouds() {
+  const group = useRef<THREE.Group>(null!);
+  const clouds = useMemo(() => {
+    const arr: { pos: [number, number, number]; scale: number; speed: number; tint: string; opacity: number }[] = [];
+    for (let i = 0; i < 30; i++) {
+      arr.push({
+        pos: [
+          (Math.random() - 0.5) * 140,
+          6 + Math.random() * 14,
+          -500 - Math.random() * 60,
+        ],
+        scale: 10 + Math.random() * 16,
+        speed: 0.15 + Math.random() * 0.4,
+        tint: '#ffffff',
+        opacity: 0.85,
+      });
+    }
+    return arr;
+  }, []);
+  useFrame(() => {
+    const p = scrollState.progress;
+    const op = envelope(p, CH.storm[1] - 0.01, CH.house[0], 0.04);
+    if (group.current) {
+      group.current.visible = op > 0.01;
+      group.current.children.forEach((c) => {
+        const m = (c as THREE.Mesh).material as THREE.ShaderMaterial;
+        if (m && m.uniforms.uOpacity) m.uniforms.uOpacity.value = op * 0.9;
+      });
+    }
+  });
+  return <group ref={group}>{clouds.map((c, i) => <Cloud key={i} {...c} />)}</group>;
+}
+
+/** Inside-house computer monitor with contact info glowing */
+/** Interior of the house — walls, floor, ceiling, desk and a monitor on the desk.
+ * Camera enters during the house chapter and settles in front of the monitor. */
+function HouseInterior() {
+  const ref = useRef<THREE.Group>(null!);
+  useFrame(() => {
+    const op = envelope(scrollState.progress, CH.house[0] - 0.015, CH.house[1] + 0.01, 0.025);
+    if (!ref.current) return;
+    ref.current.visible = op > 0.01;
+    ref.current.traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      const m = mesh.material as (THREE.MeshStandardMaterial | THREE.MeshBasicMaterial) | undefined;
+      if (m && 'opacity' in m) m.opacity = op;
+    });
+  });
+  // Room center z=-560, front opening at z=-548 (where the camera enters),
+  // back wall at z=-572, desk with monitor roughly at z=-566.
+  return (
+    <group ref={ref} position={[0, 0, -560]}>
+      {/* floor */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]}>
+        <planeGeometry args={[26, 28]} />
+        <meshStandardMaterial color="#2e1e10" roughness={0.9} transparent />
+      </mesh>
+      {/* ceiling */}
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 6.5, 0]}>
+        <planeGeometry args={[26, 28]} />
+        <meshStandardMaterial color="#1c1208" roughness={0.95} transparent />
+      </mesh>
+      {/* back wall */}
+      <mesh position={[0, 3, -12]}>
+        <planeGeometry args={[26, 7]} />
+        <meshStandardMaterial color="#4a3222" roughness={0.85} transparent />
+      </mesh>
+      {/* left wall */}
+      <mesh rotation={[0, Math.PI / 2, 0]} position={[-13, 3, 0]}>
+        <planeGeometry args={[28, 7]} />
+        <meshStandardMaterial color="#3d2818" roughness={0.85} transparent />
+      </mesh>
+      {/* right wall */}
+      <mesh rotation={[0, -Math.PI / 2, 0]} position={[13, 3, 0]}>
+        <planeGeometry args={[28, 7]} />
+        <meshStandardMaterial color="#3d2818" roughness={0.85} transparent />
+      </mesh>
+      {/* desk top */}
+      <mesh position={[0, 1.0, -6]}>
+        <boxGeometry args={[9, 0.25, 4]} />
+        <meshStandardMaterial color="#1a0f06" roughness={0.55} metalness={0.15} transparent />
+      </mesh>
+      {/* desk legs */}
+      <mesh position={[-4, 0.1, -6]}>
+        <boxGeometry args={[0.3, 2, 0.3]} />
+        <meshStandardMaterial color="#120a04" roughness={0.7} transparent />
+      </mesh>
+      <mesh position={[4, 0.1, -6]}>
+        <boxGeometry args={[0.3, 2, 0.3]} />
+        <meshStandardMaterial color="#120a04" roughness={0.7} transparent />
+      </mesh>
+      {/* monitor stand */}
+      <mesh position={[0, 1.55, -6.4]}>
+        <boxGeometry args={[0.35, 0.9, 0.35]} />
+        <meshStandardMaterial color="#0a0a0a" roughness={0.6} metalness={0.3} transparent />
+      </mesh>
+      {/* monitor base plate */}
+      <mesh position={[0, 1.12, -6.4]}>
+        <boxGeometry args={[1.2, 0.08, 1.0]} />
+        <meshStandardMaterial color="#0a0a0a" roughness={0.6} metalness={0.3} transparent />
       </mesh>
       {/* monitor bezel */}
-      <mesh position={[0, 0, 0]}>
-        <planeGeometry args={[8, 5]} />
-        <meshBasicMaterial color="#0a0a10" transparent toneMapped={false} />
+      <mesh position={[0, 2.9, -6.55]}>
+        <boxGeometry args={[6.5, 3.7, 0.18]} />
+        <meshStandardMaterial color="#0a0a0a" roughness={0.55} metalness={0.35} transparent />
       </mesh>
-      {/* screen (the actual content is drawn via overlay HTML synced to same range) */}
-      <mesh position={[0, 0, 0.01]}>
-        <planeGeometry args={[7.4, 4.4]} />
-        <meshBasicMaterial ref={matRef} color="#1a1f2e" transparent toneMapped={false} />
+      {/* monitor screen (glow — HTML terminal overlay is drawn on top of the canvas) */}
+      <mesh position={[0, 2.9, -6.45]}>
+        <planeGeometry args={[6.0, 3.3]} />
+        <meshBasicMaterial color="#0e1420" transparent toneMapped={false} />
       </mesh>
-      {/* warm room light from side */}
-      <pointLight position={[-6, 2, 3]} intensity={3} color="#ffb060" distance={18} />
+      {/* faint screen halo */}
+      <mesh position={[0, 2.9, -6.44]}>
+        <planeGeometry args={[7.6, 4.8]} />
+        <meshBasicMaterial color="#5aa0ff" transparent opacity={0.12} blending={THREE.AdditiveBlending} depthWrite={false} />
+      </mesh>
+      {/* small desk lamp — warm bulb */}
+      <mesh position={[3.3, 1.5, -6]}>
+        <sphereGeometry args={[0.18, 12, 12]} />
+        <meshBasicMaterial color="#ffc070" transparent toneMapped={false} />
+      </mesh>
+      {/* picture on back wall */}
+      <mesh position={[-5, 3.6, -11.95]}>
+        <planeGeometry args={[1.8, 1.2]} />
+        <meshStandardMaterial color="#7a5230" emissive="#3a2010" emissiveIntensity={0.3} transparent />
+      </mesh>
+      <mesh position={[5, 3.6, -11.95]}>
+        <planeGeometry args={[1.8, 1.2]} />
+        <meshStandardMaterial color="#6a4a28" emissive="#3a2010" emissiveIntensity={0.3} transparent />
+      </mesh>
+      {/* lights */}
+      <pointLight position={[-5, 5, 2]} intensity={2.2} color="#ffa858" distance={22} />
+      <pointLight position={[5, 4, 2]} intensity={1.6} color="#ffb070" distance={20} />
+      <pointLight position={[3.3, 1.8, -6]} intensity={1.4} color="#ffcc80" distance={8} />
+      <pointLight position={[0, 2.9, -5]} intensity={0.8} color="#5aa0ff" distance={6} />
     </group>
   );
 }
@@ -1009,11 +1136,11 @@ function CameraRig() {
       targetLookY = lookStart + (lookEnd - lookStart) * ease;
     }
 
-    // HOUSE: seated at computer — camera mostly still, slight parallax.
+    // HOUSE: seated at desk in front of monitor. Eye-level y ~2.8 so the
+    // camera looks straight at the monitor center (y=2.9 in HouseInterior).
     if (p >= CH.house[0]) {
-      const h = range(p, CH.house[0], CH.house[1]);
-      targetY = 1.0 + h * 0.15 + scrollState.mouseY * 0.08;
-      targetLookY = 1.0 + scrollState.mouseY * 0.05;
+      targetY = 2.7 + scrollState.mouseY * 0.08;
+      targetLookY = 2.9 + scrollState.mouseY * 0.05;
     }
 
     const targetRotZ = Math.sin(p * Math.PI * 2) * 0.04 + scrollState.mouseX * 0.04;
@@ -1122,8 +1249,10 @@ export function DreamCanvas() {
       <LightningBolts />
       <StormEyes />
       <GrassField />
+      <Hill />
+      <FieldClouds />
       <House />
-      <ContactMonitor />
+      <HouseInterior />
       <Dust />
       <Stars />
       <CameraRig />
