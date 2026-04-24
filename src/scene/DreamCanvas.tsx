@@ -709,7 +709,7 @@ function StormMoon() {
     const moonX = 0;
     const moonY = 3.2;
     const moonWorldZ = cam.position.z - 20;
-    const moonSize = 11;
+    const moonSize = 13;
     if (group.current) group.current.position.set(moonX, moonY, moonWorldZ);
     const vec = new THREE.Vector3(scrollState.mouseX, scrollState.mouseY, 0.5).unproject(cam);
     const dir = vec.sub(cam.position).normalize();
@@ -726,21 +726,22 @@ function StormMoon() {
   });
 
   return (
-    <group ref={group} position={[0, 3.2, -462]}>
-      <mesh>
-        <planeGeometry args={[11, 11]} />
+    <group ref={group} position={[0, 3.2, -462]} renderOrder={999}>
+      <mesh renderOrder={999}>
+        <planeGeometry args={[13, 13]} />
         <shaderMaterial
           uniforms={uniforms}
           vertexShader={cloudVert}
           fragmentShader={moonFrag}
           transparent
           depthWrite={false}
+          depthTest={false}
           blending={THREE.NormalBlending}
         />
       </mesh>
       {/* Additive glow halo — bigger, softer, also reacts via same uniforms */}
-      <mesh position={[0, 0, -0.1]}>
-        <planeGeometry args={[22, 22]} />
+      <mesh position={[0, 0, -0.1]} renderOrder={998}>
+        <planeGeometry args={[26, 26]} />
         <shaderMaterial
           uniforms={uniforms}
           vertexShader={cloudVert}
@@ -766,6 +767,7 @@ function StormMoon() {
           `}
           transparent
           depthWrite={false}
+          depthTest={false}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
@@ -887,9 +889,9 @@ function GrassField() {
 function House() {
   const group = useRef<THREE.Group>(null!);
   useFrame(() => {
-    // Visible as we descend + approach during field; fades out as we "enter"
-    // at the start of the house chapter so the interior can take over.
-    const op = envelope(scrollState.progress, CH.storm[1] - 0.01, CH.house[0] + 0.005, 0.035);
+    // Visible during storm→field descent. Fades out BEFORE we fly through the
+    // front wall (late-field) so the camera never collides with opaque geometry.
+    const op = envelope(scrollState.progress, CH.storm[1] - 0.01, CH.field[1] - 0.01, 0.025);
     if (group.current) {
       group.current.visible = op > 0.01;
       group.current.traverse((o) => {
@@ -900,9 +902,8 @@ function House() {
     }
   });
   return (
-    // House on a grassy hill, far enough ahead that the descending camera
-    // arrives at its porch by the end of the field chapter.
-    <group ref={group} position={[0, -1.3, -548]} scale={2.2}>
+    // House sitting ON TOP of the hill (y>0 so it's perched, not sunk).
+    <group ref={group} position={[0, 0.6, -553]} scale={2.0}>
       {/* walls */}
       <mesh position={[0, 1.5, 0]}>
         <boxGeometry args={[6, 3, 5]} />
@@ -936,11 +937,12 @@ function House() {
   );
 }
 
-/** Wide, shallow grassy hill under + behind the house — does NOT block the door. */
+/** Grassy mound — the "montezinho" under the house. Big dome so the house
+ *  reads as perched on top of a hill. Fades out late-field alongside the house. */
 function Hill() {
   const ref = useRef<THREE.Mesh>(null!);
   useFrame(() => {
-    const op = envelope(scrollState.progress, CH.storm[1] - 0.01, CH.house[0] + 0.02, 0.04);
+    const op = envelope(scrollState.progress, CH.storm[1] - 0.01, CH.field[1] - 0.01, 0.04);
     if (ref.current) {
       ref.current.visible = op > 0.01;
       const m = ref.current.material as THREE.MeshStandardMaterial;
@@ -948,14 +950,12 @@ function Hill() {
     }
   });
   return (
-    // Half-sphere, wide and short, centered slightly BEHIND the house so the
-    // door stays visible. Hill edge stops before the house's front wall.
     <mesh
       ref={ref}
-      position={[0, -1.8, -552]}
-      scale={[9, 0.7, 8]}
+      position={[0, -1.5, -553]}
+      scale={[16, 3.0, 14]}
     >
-      <sphereGeometry args={[1, 32, 16, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+      <sphereGeometry args={[1, 48, 20, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
       <meshStandardMaterial color="#3e6e22" roughness={1} transparent />
     </mesh>
   );
@@ -1001,7 +1001,9 @@ function FieldClouds() {
 function HouseInterior() {
   const ref = useRef<THREE.Group>(null!);
   useFrame(() => {
-    const op = envelope(scrollState.progress, CH.house[0] - 0.015, CH.house[1] + 0.01, 0.025);
+    // Fade the interior in during late-field so the transition is continuous
+    // with the exterior fade-out: by p≈0.93 the interior is already present.
+    const op = envelope(scrollState.progress, CH.field[1] - 0.03, CH.house[1] + 0.01, 0.025);
     if (!ref.current) return;
     ref.current.visible = op > 0.01;
     ref.current.traverse((o) => {
@@ -1010,93 +1012,112 @@ function HouseInterior() {
       if (m && 'opacity' in m) m.opacity = op;
     });
   });
-  // Room center z=-560, front opening at z=-548 (where the camera enters),
-  // back wall at z=-572, desk with monitor roughly at z=-566.
+  // Room center world z=-570. Front opening at world z=-560. Back wall at
+  // world z=-580. Camera arrives at z≈-568 (from CAMERA_Z[10]=-568) —
+  // roughly 11 units in front of the monitor which sits ON THE BACK WALL.
   return (
-    <group ref={ref} position={[0, 0, -560]}>
+    <group ref={ref} position={[0, 0, -570]}>
+      {/* ambient fill so walls/floor/ceiling are readable, not pitch black */}
+      <ambientLight intensity={0.55} color="#ffb880" />
       {/* floor */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.5, 0]}>
-        <planeGeometry args={[26, 28]} />
-        <meshStandardMaterial color="#2e1e10" roughness={0.9} transparent />
+        <planeGeometry args={[28, 24]} />
+        <meshStandardMaterial color="#6a4828" roughness={0.9} transparent />
       </mesh>
       {/* ceiling */}
-      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 6.5, 0]}>
-        <planeGeometry args={[26, 28]} />
-        <meshStandardMaterial color="#1c1208" roughness={0.95} transparent />
+      <mesh rotation={[Math.PI / 2, 0, 0]} position={[0, 6.0, 0]}>
+        <planeGeometry args={[28, 24]} />
+        <meshStandardMaterial color="#4a3220" roughness={0.95} transparent />
       </mesh>
-      {/* back wall */}
-      <mesh position={[0, 3, -12]}>
-        <planeGeometry args={[26, 7]} />
-        <meshStandardMaterial color="#4a3222" roughness={0.85} transparent />
+      {/* back wall (where monitor hangs) */}
+      <mesh position={[0, 2.75, -10]}>
+        <planeGeometry args={[28, 6.5]} />
+        <meshStandardMaterial color="#8a6842" roughness={0.85} transparent />
       </mesh>
       {/* left wall */}
-      <mesh rotation={[0, Math.PI / 2, 0]} position={[-13, 3, 0]}>
-        <planeGeometry args={[28, 7]} />
-        <meshStandardMaterial color="#3d2818" roughness={0.85} transparent />
+      <mesh rotation={[0, Math.PI / 2, 0]} position={[-14, 2.75, 0]}>
+        <planeGeometry args={[24, 6.5]} />
+        <meshStandardMaterial color="#7a5a38" roughness={0.85} transparent />
       </mesh>
       {/* right wall */}
-      <mesh rotation={[0, -Math.PI / 2, 0]} position={[13, 3, 0]}>
-        <planeGeometry args={[28, 7]} />
-        <meshStandardMaterial color="#3d2818" roughness={0.85} transparent />
+      <mesh rotation={[0, -Math.PI / 2, 0]} position={[14, 2.75, 0]}>
+        <planeGeometry args={[24, 6.5]} />
+        <meshStandardMaterial color="#7a5a38" roughness={0.85} transparent />
       </mesh>
-      {/* desk top */}
-      <mesh position={[0, 1.0, -6]}>
-        <boxGeometry args={[9, 0.25, 4]} />
-        <meshStandardMaterial color="#1a0f06" roughness={0.55} metalness={0.15} transparent />
+      {/* baseboard trim — helps read walls as walls */}
+      <mesh position={[0, -0.3, -9.98]}>
+        <planeGeometry args={[28, 0.35]} />
+        <meshStandardMaterial color="#2a1a0c" roughness={0.9} transparent />
+      </mesh>
+      {/* desk top — placed against the back wall, under the monitor */}
+      <mesh position={[0, 1.1, -8.2]}>
+        <boxGeometry args={[10, 0.28, 3.2]} />
+        <meshStandardMaterial color="#2a1808" roughness={0.55} metalness={0.15} transparent />
       </mesh>
       {/* desk legs */}
-      <mesh position={[-4, 0.1, -6]}>
-        <boxGeometry args={[0.3, 2, 0.3]} />
-        <meshStandardMaterial color="#120a04" roughness={0.7} transparent />
+      <mesh position={[-4.5, 0.1, -8.2]}>
+        <boxGeometry args={[0.32, 2.1, 0.32]} />
+        <meshStandardMaterial color="#160c04" roughness={0.7} transparent />
       </mesh>
-      <mesh position={[4, 0.1, -6]}>
-        <boxGeometry args={[0.3, 2, 0.3]} />
-        <meshStandardMaterial color="#120a04" roughness={0.7} transparent />
+      <mesh position={[4.5, 0.1, -8.2]}>
+        <boxGeometry args={[0.32, 2.1, 0.32]} />
+        <meshStandardMaterial color="#160c04" roughness={0.7} transparent />
       </mesh>
-      {/* monitor stand */}
-      <mesh position={[0, 1.55, -6.4]}>
-        <boxGeometry args={[0.35, 0.9, 0.35]} />
+      {/* keyboard — thin rectangle on desk */}
+      <mesh position={[0, 1.26, -7.4]}>
+        <boxGeometry args={[3.2, 0.08, 1.0]} />
+        <meshStandardMaterial color="#0a0a0a" roughness={0.7} transparent />
+      </mesh>
+      {/* mouse */}
+      <mesh position={[2.2, 1.26, -7.4]}>
+        <boxGeometry args={[0.45, 0.08, 0.7]} />
+        <meshStandardMaterial color="#0a0a0a" roughness={0.7} transparent />
+      </mesh>
+      {/* monitor stand — short pole from desk to monitor, placed near the back wall */}
+      <mesh position={[0, 1.65, -9.0]}>
+        <boxGeometry args={[0.3, 1.1, 0.3]} />
         <meshStandardMaterial color="#0a0a0a" roughness={0.6} metalness={0.3} transparent />
       </mesh>
       {/* monitor base plate */}
-      <mesh position={[0, 1.12, -6.4]}>
-        <boxGeometry args={[1.2, 0.08, 1.0]} />
+      <mesh position={[0, 1.25, -9.0]}>
+        <boxGeometry args={[1.4, 0.08, 1.0]} />
         <meshStandardMaterial color="#0a0a0a" roughness={0.6} metalness={0.3} transparent />
       </mesh>
-      {/* monitor bezel */}
-      <mesh position={[0, 2.9, -6.55]}>
-        <boxGeometry args={[6.5, 3.7, 0.18]} />
-        <meshStandardMaterial color="#0a0a0a" roughness={0.55} metalness={0.35} transparent />
+      {/* monitor bezel — mounted on BACK WALL (z=-9.85) */}
+      <mesh position={[0, 2.85, -9.85]}>
+        <boxGeometry args={[6.8, 3.9, 0.16]} />
+        <meshStandardMaterial color="#050505" roughness={0.5} metalness={0.4} transparent />
       </mesh>
-      {/* monitor screen (glow — HTML terminal overlay is drawn on top of the canvas) */}
-      <mesh position={[0, 2.9, -6.45]}>
-        <planeGeometry args={[6.0, 3.3]} />
-        <meshBasicMaterial color="#0e1420" transparent toneMapped={false} />
+      {/* monitor screen — HTML terminal overlay sits on top of this in screen space */}
+      <mesh position={[0, 2.85, -9.77]}>
+        <planeGeometry args={[6.2, 3.4]} />
+        <meshBasicMaterial color="#0a1220" transparent toneMapped={false} />
       </mesh>
-      {/* faint screen halo */}
-      <mesh position={[0, 2.9, -6.44]}>
-        <planeGeometry args={[7.6, 4.8]} />
-        <meshBasicMaterial color="#5aa0ff" transparent opacity={0.12} blending={THREE.AdditiveBlending} depthWrite={false} />
+      {/* screen bloom halo */}
+      <mesh position={[0, 2.85, -9.76]}>
+        <planeGeometry args={[8.2, 5.2]} />
+        <meshBasicMaterial color="#6aa8ff" transparent opacity={0.18} blending={THREE.AdditiveBlending} depthWrite={false} />
       </mesh>
-      {/* small desk lamp — warm bulb */}
-      <mesh position={[3.3, 1.5, -6]}>
-        <sphereGeometry args={[0.18, 12, 12]} />
-        <meshBasicMaterial color="#ffc070" transparent toneMapped={false} />
+      {/* desk lamp bulb — warm glowing orb */}
+      <mesh position={[4.0, 1.6, -8.2]}>
+        <sphereGeometry args={[0.22, 14, 14]} />
+        <meshBasicMaterial color="#ffc878" transparent toneMapped={false} />
       </mesh>
-      {/* picture on back wall */}
-      <mesh position={[-5, 3.6, -11.95]}>
-        <planeGeometry args={[1.8, 1.2]} />
-        <meshStandardMaterial color="#7a5230" emissive="#3a2010" emissiveIntensity={0.3} transparent />
+      {/* pictures on back wall */}
+      <mesh position={[-6.5, 3.8, -9.94]}>
+        <planeGeometry args={[2.0, 1.3]} />
+        <meshStandardMaterial color="#9a6838" emissive="#4a2410" emissiveIntensity={0.35} transparent />
       </mesh>
-      <mesh position={[5, 3.6, -11.95]}>
-        <planeGeometry args={[1.8, 1.2]} />
-        <meshStandardMaterial color="#6a4a28" emissive="#3a2010" emissiveIntensity={0.3} transparent />
+      <mesh position={[6.5, 3.8, -9.94]}>
+        <planeGeometry args={[2.0, 1.3]} />
+        <meshStandardMaterial color="#8a5830" emissive="#4a2410" emissiveIntensity={0.35} transparent />
       </mesh>
-      {/* lights */}
-      <pointLight position={[-5, 5, 2]} intensity={2.2} color="#ffa858" distance={22} />
-      <pointLight position={[5, 4, 2]} intensity={1.6} color="#ffb070" distance={20} />
-      <pointLight position={[3.3, 1.8, -6]} intensity={1.4} color="#ffcc80" distance={8} />
-      <pointLight position={[0, 2.9, -5]} intensity={0.8} color="#5aa0ff" distance={6} />
+      {/* lights — closer to camera so the room front is lit; one behind camera
+       *  for general fill. Distances large enough to actually reach the walls. */}
+      <pointLight position={[-5, 4.5, 3]} intensity={3.0} color="#ffa858" distance={28} decay={1.2} />
+      <pointLight position={[5, 4.5, 3]} intensity={2.2} color="#ffb070" distance={26} decay={1.2} />
+      <pointLight position={[4.0, 2.0, -8.2]} intensity={1.8} color="#ffcc80" distance={10} decay={1.4} />
+      <pointLight position={[0, 2.85, -7.5]} intensity={1.2} color="#6aa8ff" distance={8} decay={1.4} />
     </group>
   );
 }
@@ -1125,22 +1146,22 @@ function CameraRig() {
     if (p >= CH.storm[1] - 0.005 && p < CH.house[0]) {
       const d = Math.min(1, Math.max(0, (p - (CH.storm[1] - 0.005)) / (CH.field[1] - (CH.storm[1] - 0.005))));
       const skyY = 14;       // high above clouds
-      const groundY = 1.4;   // eye-level at house
+      const groundY = 2.2;   // chest-level looking toward house on hill
       // ease-out cubic → fast initial fall, gentle settle
       const ease = 1 - Math.pow(1 - d, 3);
       targetY = skyY + (groundY - skyY) * ease + scrollState.mouseY * 0.2;
-      // Look down-forward: start looking nearly straight down (lookY far below
-      // camera), end looking at the house roof height.
-      const lookStart = skyY - 12;   // 2 below camera initially → nearly down
-      const lookEnd = 2.0;
+      // Look down-forward: start looking nearly straight down, end looking at
+      // the house on the hill (hill peak ~1.3, house roof ~5).
+      const lookStart = skyY - 12;
+      const lookEnd = 2.8;
       targetLookY = lookStart + (lookEnd - lookStart) * ease;
     }
 
-    // HOUSE: seated at desk in front of monitor. Eye-level y ~2.8 so the
-    // camera looks straight at the monitor center (y=2.9 in HouseInterior).
+    // HOUSE: seated at desk in front of monitor. Eye-level y≈2.85 so the
+    // camera looks dead-center at the monitor (y=2.85 in HouseInterior).
     if (p >= CH.house[0]) {
-      targetY = 2.7 + scrollState.mouseY * 0.08;
-      targetLookY = 2.9 + scrollState.mouseY * 0.05;
+      targetY = 2.85 + scrollState.mouseY * 0.06;
+      targetLookY = 2.85 + scrollState.mouseY * 0.04;
     }
 
     const targetRotZ = Math.sin(p * Math.PI * 2) * 0.04 + scrollState.mouseX * 0.04;

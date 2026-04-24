@@ -59,6 +59,9 @@ export function Overlays() {
   const stormOp = envelope(p, CH.storm[0], CH.storm[1], 0.03);
   const fieldOp = envelope(p, CH.field[0], CH.field[1], 0.04);
   const houseOp = envelope(p, CH.house[0], CH.house[1], 0.03);
+  // Contact terminal fades in only once camera is clearly INSIDE the room —
+  // avoids the terminal floating over the house exterior during entry.
+  const terminalOp = envelope(p, CH.house[0] + 0.015, CH.house[1], 0.015);
 
   const projLocal = range(p, CH.projects[0], CH.projects[1]);
   const projIdx = Math.min(projects.length - 1, Math.round(projLocal * (projects.length - 1)));
@@ -273,7 +276,7 @@ export function Overlays() {
           <Drift text="vamos" /><br />
           <em><Drift text="construir" base={2} /></em>
         </h2>
-        <div className={styles.contactTerminal}>
+        <div className={styles.contactTerminal} style={{ opacity: terminalOp, transform: `translate(-50%, ${-46 + (1 - terminalOp) * 6}%)` }}>
           <div className={styles.terminalHeader}>
             <span className={styles.terminalDot} style={{ background: '#ff5f56' }} />
             <span className={styles.terminalDot} style={{ background: '#ffbd2e' }} />
