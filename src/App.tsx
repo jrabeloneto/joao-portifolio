@@ -1,19 +1,20 @@
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import { useLenis } from './hooks/useLenis';
-import { useParallaxLayers } from './hooks/useParallaxLayers';
 import { Cursor } from './components/ui/Cursor';
 import { LoadingScreen } from './components/ui/LoadingScreen';
+import { DreamCanvas } from './scene/DreamCanvas';
+import { Overlays } from './overlays/Overlays';
 import { Navbar } from './components/ui/Navbar';
-import { Hero } from './components/sections/Hero';
-import { About } from './components/sections/About';
-import { Projects } from './components/sections/Projects';
-import { Skills } from './components/sections/Skills';
-import { Experience } from './components/sections/Experience';
-import { Contact } from './components/sections/Contact';
 
+/**
+ * activetheory-style architecture:
+ * - a fullscreen fixed <canvas> renders the whole 3D world
+ * - a 600vh invisible spacer provides scrollable range
+ * - global scroll progress (0..1) drives the camera AND fades overlays
+ * - HTML overlays live above the canvas, synced per-chapter
+ */
 export default function App() {
   useLenis();
-  useParallaxLayers();
   const [loaded, setLoaded] = useState(false);
 
   return (
@@ -21,14 +22,12 @@ export default function App() {
       {!loaded && <LoadingScreen onDone={() => setLoaded(true)} />}
       <Cursor />
       <Navbar />
-      <main>
-        <Hero />
-        <About />
-        <Projects />
-        <Skills />
-        <Experience />
-        <Contact />
-      </main>
+      <Suspense fallback={null}>
+        <DreamCanvas />
+      </Suspense>
+      <Overlays />
+      {/* virtual scroll spacer — provides scrollable height that maps to progress 0..1 */}
+      <div aria-hidden style={{ height: '600vh', width: '100%', pointerEvents: 'none' }} />
     </>
   );
 }

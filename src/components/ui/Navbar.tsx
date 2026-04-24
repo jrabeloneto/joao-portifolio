@@ -1,27 +1,33 @@
 import styles from './Navbar.module.css';
+import { CH } from '../../state/scroll';
 
 const links = [
-  { href: '#about', label: 'Sobre' },
-  { href: '#projects', label: 'Projetos' },
-  { href: '#skills', label: 'Stack' },
-  { href: '#experience', label: 'Experiência' },
-  { href: '#contact', label: 'Contato' },
+  { at: CH.about[0], label: 'sobre' },
+  { at: CH.projects[0], label: 'projetos' },
+  { at: CH.skills[0], label: 'stack' },
+  { at: CH.experience[0], label: 'experiência' },
+  { at: CH.contact[0], label: 'contato' },
 ];
+
+function scrollTo(progress: number) {
+  const max = document.documentElement.scrollHeight - window.innerHeight;
+  window.scrollTo({ top: max * progress, behavior: 'smooth' });
+}
 
 export function Navbar() {
   return (
     <nav className={styles.nav}>
-      <a href="#" className={styles.logo}>JR.</a>
+      <button className={styles.logo} onClick={() => scrollTo(0)} data-cursor>JR.</button>
       <ul className={styles.list}>
         {links.map((l) => (
-          <li key={l.href}>
-            <a href={l.href}>{l.label}</a>
+          <li key={l.label}>
+            <button onClick={() => scrollTo(l.at)} data-cursor>{l.label}</button>
           </li>
         ))}
       </ul>
-      <a href="#contact" className={styles.cta} data-cursor>
+      <button className={styles.cta} onClick={() => scrollTo(CH.contact[0])} data-cursor>
         <span className={styles.dot} /> disponível
-      </a>
+      </button>
     </nav>
   );
 }
