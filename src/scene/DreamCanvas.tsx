@@ -394,19 +394,24 @@ function ProjectScreen({ index, total, url }: { index: number; total: number; ur
   const ref = useRef<THREE.Group>(null!);
   const matRef = useRef<THREE.MeshBasicMaterial>(null!);
   const frameMat = useRef<THREE.MeshStandardMaterial>(null!);
-  const { basePos, rotY } = useMemo(() => {
-    const t = index / (total - 1);
-    const x = Math.sin(t * Math.PI * 2.0) * 14;
-    const y = Math.cos(t * Math.PI * 2.2) * 3.5 + 0.5;
-    // Spread projects across z=-200 .. z=-350 (long range)
-    const z = -200 - t * 150;
-    return { basePos: new THREE.Vector3(x, y, z), rotY: -x * 0.04 };
+  const { basePos, rotY, slot } = useMemo(() => {
+    // Place each project EXACTLY where the camera will be when its overlay is
+    // shown, offset a fixed distance ahead. This keeps the 3D screen locked
+    // in sync with the project name in the overlay.
+    const s = index / Math.max(1, total - 1);
+    const pAtSlot = CH.projects[0] + s * (CH.projects[1] - CH.projects[0]);
+    const camZ = cameraZAt(pAtSlot);
+    const aheadOffset = 22; // units ahead of camera at this slot
+    const z = camZ - aheadOffset;
+    // X/Y in a gentle spiral so projects don't stack, but stay roughly in frame
+    const x = Math.sin(s * Math.PI * 2.2) * 9;
+    const y = Math.cos(s * Math.PI * 2.4) * 2.8 + 0.4;
+    return { basePos: new THREE.Vector3(x, y, z), rotY: -x * 0.03, slot: s };
   }, [index, total]);
 
   useFrame(() => {
     const p = scrollState.progress;
     const local = range(p, CH.projects[0], CH.projects[1]);
-    const slot = index / Math.max(1, total - 1);
     const focus = Math.max(0, 1 - Math.abs(local - slot) * total * 0.85);
     const op = envelope(p, CH.projects[0], CH.projects[1], 0.03);
     if (matRef.current) matRef.current.opacity = op * (0.35 + 0.65 * Math.max(0.25, focus));
@@ -495,20 +500,21 @@ function StormClouds() {
   const group = useRef<THREE.Group>(null!);
   const clouds = useMemo(() => {
     const arr: { pos: [number, number, number]; scale: number; speed: number; tint: string }[] = [];
-    // Dense layered storm clouds — fill the whole viewport during storm chapter.
-    // Camera sits near z=-450, so clouds are spread from -420 (behind) to -490 (ahead).
-    for (let i = 0; i < 55; i++) {
-      const layer = i % 3;           // 0 front, 1 mid, 2 back
-      const zBase = -425 - layer * 22;
+    // Heavy layered storm clouds. Camera sits near z=-450 during storm;
+    // clouds are all AHEAD of the camera (z < -450) so the view is a
+    // churning wall of thunderheads with the moon (z=-462) framed by them.
+    for (let i = 0; i < 80; i++) {
+      const layer = i % 4;           // 0 nearest, 3 farthest
+      const zBase = -472 - layer * 14;
       arr.push({
         pos: [
-          (Math.random() - 0.5) * 120,
-          -6 + Math.random() * 16,
-          zBase + (Math.random() - 0.5) * 20,
+          (Math.random() - 0.5) * 130,
+          -8 + Math.random() * 22,
+          zBase + (Math.random() - 0.5) * 12,
         ],
-        scale: 14 + Math.random() * 24,
+        scale: 18 + Math.random() * 28,
         speed: 0.2 + Math.random() * 0.6,
-        tint: layer === 0 ? '#1d1d26' : layer === 1 ? '#141420' : '#0a0a14',
+        tint: layer === 0 ? '#24242e' : layer === 1 ? '#181820' : layer === 2 ? '#0f0f18' : '#070712',
       });
     }
     return arr;
@@ -519,14 +525,14 @@ function StormClouds() {
       group.current.visible = op > 0.01;
       group.current.children.forEach((c) => {
         const m = (c as THREE.Mesh).material as THREE.ShaderMaterial;
-        if (m && m.uniforms.uOpacity) m.uniforms.uOpacity.value = op * 0.95;
+        if (m && m.uniforms.uOpacity) m.uniforms.uOpacity.value = op * 1.0;
       });
     }
   });
   return (
     <group ref={group}>
       {clouds.map((c, i) => (
-        <Cloud key={i} pos={c.pos} scale={c.scale} speed={c.speed} tint={c.tint} opacity={0.9} />
+        <Cloud key={i} pos={c.pos} scale={c.scale} speed={c.speed} tint={c.tint} opacity={1.0} />
       ))}
     </group>
   );
@@ -539,15 +545,16 @@ function StormEyes() {
   const eyes = useMemo(() => {
     const arr: { pos: [number, number, number]; scale: number; baseOp: number; tilt: number }[] = [];
     // Scatter eyes at multiple depths, embedded amongst storm clouds.
-    for (let i = 0; i < 16; i++) {
+    // All positioned AHEAD of the camera (z < -450) between cloud layers.
+    for (let i = 0; i < 18; i++) {
       arr.push({
         pos: [
-          (Math.random() - 0.5) * 70,
-          -4 + Math.random() * 13,
-          -432 - Math.random() * 45,
+          (Math.random() - 0.5) * 80,
+          -5 + Math.random() * 17,
+          -468 - Math.random() * 40,
         ],
-        scale: 0.7 + Math.random() * 1.3,
-        baseOp: 0.22 + Math.random() * 0.35, // always at least faintly visible
+        scale: 0.7 + Math.random() * 1.4,
+        baseOp: 0.28 + Math.random() * 0.40, // always at least faintly visible
         tilt: (Math.random() - 0.5) * 0.4,
       });
     }
@@ -698,10 +705,12 @@ function StormMoon() {
 
     // Project mouse (NDC -1..1) into the moon plane UV space (0..1).
     // Moon center must match the <group> position below, or cursor never hits.
+    // Camera is around z=-450 during storm, so moon sits ahead at z=-462, with
+    // all storm clouds pushed farther than that so none occlude the moon.
     const moonX = 0;
-    const moonY = 2.8;
-    const moonWorldZ = -458;
-    const moonSize = 10; // plane is 10x10
+    const moonY = 3.2;
+    const moonWorldZ = -462;
+    const moonSize = 11;
     const cam = state.camera as THREE.PerspectiveCamera;
     const vec = new THREE.Vector3(scrollState.mouseX, scrollState.mouseY, 0.5).unproject(cam);
     const dir = vec.sub(cam.position).normalize();
@@ -718,9 +727,9 @@ function StormMoon() {
   });
 
   return (
-    <group ref={group} position={[0, 2.8, -458]}>
+    <group ref={group} position={[0, 3.2, -462]}>
       <mesh>
-        <planeGeometry args={[10, 10]} />
+        <planeGeometry args={[11, 11]} />
         <shaderMaterial
           uniforms={uniforms}
           vertexShader={cloudVert}
@@ -732,7 +741,7 @@ function StormMoon() {
       </mesh>
       {/* Additive glow halo — bigger, softer, also reacts via same uniforms */}
       <mesh position={[0, 0, -0.1]}>
-        <planeGeometry args={[20, 20]} />
+        <planeGeometry args={[22, 22]} />
         <shaderMaterial
           uniforms={uniforms}
           vertexShader={cloudVert}
@@ -769,14 +778,17 @@ function StormMoon() {
 function LightningBolts() {
   const group = useRef<THREE.Group>(null!);
   const bolts = useMemo(() => {
-    return Array.from({ length: 4 }).map((_, i) => ({
-      x: (i - 1.5) * 12 + (Math.random() - 0.5) * 6,
-      z: -445 - i * 3,
+    return Array.from({ length: 10 }).map((_, i) => ({
+      x: (Math.random() - 0.5) * 70,
+      z: -475 - Math.random() * 30,
+      scale: 0.8 + Math.random() * 1.3,
+      tilt: (Math.random() - 0.5) * 0.3,
     }));
   }, []);
   const flashIntensity = useRef(0);
   const flashNext = useRef(0);
   const activeBolt = useRef(-1);
+  const secondBolt = useRef(-1);
   useFrame((_, dt) => {
     const p = scrollState.progress;
     const stormOp = envelope(p, CH.storm[0], CH.storm[1], 0.03);
@@ -786,13 +798,16 @@ function LightningBolts() {
         const now = performance.now() / 1000;
         if (now > flashNext.current) {
           flashIntensity.current = 1;
-          flashNext.current = now + 0.9 + Math.random() * 2.4;
+          // Much more frequent strikes — storm feels alive
+          flashNext.current = now + 0.35 + Math.random() * 1.0;
           activeBolt.current = Math.floor(Math.random() * bolts.length);
+          // Sometimes two bolts at once
+          secondBolt.current = Math.random() < 0.35 ? Math.floor(Math.random() * bolts.length) : -1;
         }
-        flashIntensity.current = Math.max(0, flashIntensity.current - dt * 6);
+        flashIntensity.current = Math.max(0, flashIntensity.current - dt * 7);
         group.current.children.forEach((c, i) => {
           const m = (c as THREE.Mesh).material as THREE.MeshBasicMaterial;
-          const vis = i === activeBolt.current ? flashIntensity.current : 0;
+          const vis = (i === activeBolt.current || i === secondBolt.current) ? flashIntensity.current : 0;
           if (m) m.opacity = vis * stormOp;
         });
       }
@@ -801,9 +816,9 @@ function LightningBolts() {
   return (
     <group ref={group}>
       {bolts.map((b, i) => (
-        <mesh key={i} position={[b.x, 3, b.z]}>
-          <planeGeometry args={[0.3, 18]} />
-          <meshBasicMaterial color="#ffffff" transparent opacity={0} toneMapped={false} blending={THREE.AdditiveBlending} />
+        <mesh key={i} position={[b.x, 4, b.z]} rotation={[0, 0, b.tilt]} scale={b.scale}>
+          <planeGeometry args={[0.35, 22]} />
+          <meshBasicMaterial color="#f0f0ff" transparent opacity={0} toneMapped={false} blending={THREE.AdditiveBlending} />
         </mesh>
       ))}
     </group>
@@ -823,7 +838,7 @@ function GrassField() {
   useFrame((_, dt) => {
     uniforms.uTime.value += dt;
     // Start fading grass in late storm so the descent feels like the clouds part.
-    const op = envelope(scrollState.progress, CH.field[0] - 0.02, 1.0, 0.05);
+    const op = envelope(scrollState.progress, CH.storm[1] - 0.01, 1.0, 0.05);
     uniforms.uOpacity.value = op;
     if (ref.current) ref.current.visible = op > 0.01;
   });
@@ -872,7 +887,8 @@ function GrassField() {
 function House() {
   const group = useRef<THREE.Group>(null!);
   useFrame(() => {
-    const op = envelope(scrollState.progress, CH.field[0] - 0.01, CH.house[0] + 0.01, 0.04);
+    // Keep house visible through field AND house chapters (we walk up to it).
+    const op = envelope(scrollState.progress, CH.storm[1] - 0.01, CH.house[1], 0.04);
     if (group.current) {
       group.current.visible = op > 0.01;
       group.current.traverse((o) => {
@@ -886,6 +902,11 @@ function House() {
     // House on a grassy hill, far enough ahead that the descending camera
     // arrives at its porch by the end of the field chapter.
     <group ref={group} position={[0, -0.2, -548]} scale={2.2}>
+      {/* hill mound — cone stretched, grass-colored */}
+      <mesh position={[0, -1.4, 0]} scale={[3.5, 1.0, 3.2]}>
+        <sphereGeometry args={[2.5, 24, 16, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
+        <meshStandardMaterial color="#3c6b24" roughness={0.95} transparent />
+      </mesh>
       {/* walls */}
       <mesh position={[0, 1.5, 0]}>
         <boxGeometry args={[6, 3, 5]} />
@@ -972,16 +993,20 @@ function CameraRig() {
     let targetY = baseY;
     let targetLookY = baseY * 0.3;
 
-    // FIELD: smooth descent from sky (y≈6) to ground-walking (y≈1.3).
-    if (p >= CH.field[0] - 0.01 && p < CH.house[0]) {
-      const d = Math.min(1, Math.max(0, (p - (CH.field[0] - 0.01)) / (CH.field[1] - (CH.field[0] - 0.01))));
-      const skyY = 6.5;
-      const groundY = 1.3;
-      // ease-out cubic for natural falling feel
+    // FIELD: cinematic descent — start WAY up in the sky, plunge down while
+    // the look-target sweeps from horizon-height down to the house on the hill.
+    if (p >= CH.storm[1] - 0.005 && p < CH.house[0]) {
+      const d = Math.min(1, Math.max(0, (p - (CH.storm[1] - 0.005)) / (CH.field[1] - (CH.storm[1] - 0.005))));
+      const skyY = 14;       // high above clouds
+      const groundY = 1.4;   // eye-level at house
+      // ease-out cubic → fast initial fall, gentle settle
       const ease = 1 - Math.pow(1 - d, 3);
-      targetY = skyY + (groundY - skyY) * ease + scrollState.mouseY * 0.15;
-      // Look toward the house on the horizon as we descend.
-      targetLookY = skyY - ease * 5.5;
+      targetY = skyY + (groundY - skyY) * ease + scrollState.mouseY * 0.2;
+      // Look down-forward: start looking nearly straight down (lookY far below
+      // camera), end looking at the house roof height.
+      const lookStart = skyY - 12;   // 2 below camera initially → nearly down
+      const lookEnd = 2.0;
+      targetLookY = lookStart + (lookEnd - lookStart) * ease;
     }
 
     // HOUSE: seated at computer — camera mostly still, slight parallax.
