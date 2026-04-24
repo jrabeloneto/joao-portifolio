@@ -6,7 +6,7 @@ const links = [
   { at: CH.projects[0], label: 'projetos' },
   { at: CH.skills[0], label: 'stack' },
   { at: CH.experience[0], label: 'experiência' },
-  { at: CH.contact[0], label: 'contato' },
+  { at: CH.house[0], label: 'contato' },
 ];
 
 function scrollTo(progress: number) {
@@ -25,7 +25,7 @@ export function Navbar() {
           </li>
         ))}
       </ul>
-      <button className={styles.cta} onClick={() => scrollTo(CH.contact[0])} data-cursor>
+      <button className={styles.cta} onClick={() => scrollTo(CH.house[0])} data-cursor>
         <span className={styles.dot} /> disponível
       </button>
     </nav>
