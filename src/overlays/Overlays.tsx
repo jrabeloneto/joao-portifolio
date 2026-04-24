@@ -50,15 +50,18 @@ export function Overlays() {
     return () => window.clearInterval(id);
   }, []);
 
-  const heroOp = envelope(p, CH.hero[0], CH.hero[1], 0.04);
-  const aboutOp = envelope(p, CH.about[0], CH.about[1], 0.04);
-  const approachOp = envelope(p, CH.approach[0], CH.approach[1], 0.04);
-  const skillsOp = envelope(p, CH.skills[0], CH.skills[1], 0.04);
-  const projOp = envelope(p, CH.projects[0], CH.projects[1], 0.03);
-  const expOp = envelope(p, CH.experience[0], CH.experience[1], 0.04);
-  const stormOp = envelope(p, CH.storm[0], CH.storm[1], 0.03);
-  const fieldOp = envelope(p, CH.field[0], CH.field[1], 0.04);
-  const houseOp = envelope(p, CH.house[0], CH.house[1], 0.03);
+  // Tight fades (0.008) — each section completely fades out BEFORE the next
+  // one starts appearing, so text never overlaps other sections' text.
+  const F = 0.008;
+  const heroOp = envelope(p, CH.hero[0], CH.hero[1], F);
+  const aboutOp = envelope(p, CH.about[0], CH.about[1], F);
+  const approachOp = envelope(p, CH.approach[0], CH.approach[1], F);
+  const skillsOp = envelope(p, CH.skills[0], CH.skills[1], F);
+  const projOp = envelope(p, CH.projects[0], CH.projects[1], F);
+  const expOp = envelope(p, CH.experience[0], CH.experience[1], F);
+  const stormOp = envelope(p, CH.storm[0], CH.storm[1], F);
+  const fieldOp = envelope(p, CH.field[0], CH.field[1], F);
+  const houseOp = envelope(p, CH.house[0], CH.house[1], F);
   // Contact terminal fades in only once camera is clearly INSIDE the room —
   // avoids the terminal floating over the house exterior during entry.
   const terminalOp = envelope(p, CH.house[0] + 0.015, CH.house[1], 0.015);

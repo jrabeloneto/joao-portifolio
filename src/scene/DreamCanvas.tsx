@@ -96,17 +96,27 @@ function SkyDome() {
   const flashNext = useRef(0);
   const flashIntensity = useRef(0);
 
-  useFrame((_, dt) => {
+  useFrame((state, dt) => {
     uniforms.uTime.value += dt;
     const p = scrollState.progress;
 
-    // Which palette segment?
-    const segs = PALETTES.length - 1;
-    const t = Math.max(0, Math.min(1, p)) * segs;
-    const i = Math.floor(t);
-    const f = t - i;
-    const a = PALETTES[Math.min(i, segs)];
-    const b = PALETTES[Math.min(i + 1, segs)];
+    // Sky sphere must always surround the camera — camera travels from z=5
+    // down to z=-568, a radius-500 sphere at origin doesn't cover that.
+    if (ref.current) {
+      const cam = state.camera as THREE.PerspectiveCamera;
+      ref.current.position.copy(cam.position);
+    }
+
+    // Palette index mapped to chapter midpoints so e.g. field sky stays blue
+    // across the entire field chapter, only transitioning to house at p>=0.95.
+    const KEYS: number[] = [0.00, 0.14, 0.24, 0.36, 0.55, 0.71, 0.80, 0.895, 0.98];
+    let i = 0;
+    while (i < KEYS.length - 1 && p > KEYS[i + 1]) i++;
+    const pa = KEYS[i];
+    const pb = KEYS[Math.min(i + 1, KEYS.length - 1)];
+    const f = pb > pa ? Math.max(0, Math.min(1, (p - pa) / (pb - pa))) : 0;
+    const a = PALETTES[i];
+    const b = PALETTES[Math.min(i + 1, PALETTES.length - 1)];
     tmp.topA.set(a.top); tmp.topB.set(b.top);
     tmp.midA.set(a.mid); tmp.midB.set(b.mid);
     tmp.lowA.set(a.low); tmp.lowB.set(b.low);
@@ -134,8 +144,8 @@ function SkyDome() {
   });
 
   return (
-    <mesh ref={ref} scale={[-1, 1, 1]}>
-      <sphereGeometry args={[500, 32, 32]} />
+    <mesh ref={ref} scale={[-1, 1, 1]} renderOrder={-1}>
+      <sphereGeometry args={[1500, 32, 32]} />
       <shaderMaterial
         uniforms={uniforms}
         vertexShader={skyVert}
