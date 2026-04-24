@@ -56,8 +56,16 @@ export function Overlays() {
         <span className={`${styles.kicker} ${styles.kickerTopLeft}`}>// portfolio · v2 · 2026</span>
         <div className={styles.heroCenter}>
           <h1 className={styles.heroTitle}>
-            <span>JOÃO</span>
-            <span>RABELO</span>
+            <span className={styles.heroWord}>
+              {'JOÃO'.split('').map((ch, i) => (
+                <span key={i} className={styles.heroLetter} style={{ animationDelay: `${i * 0.12}s` }}>{ch}</span>
+              ))}
+            </span>
+            <span className={styles.heroWord}>
+              {'RABELO'.split('').map((ch, i) => (
+                <span key={i} className={styles.heroLetter} style={{ animationDelay: `${(i + 2) * 0.11}s` }}>{ch}</span>
+              ))}
+            </span>
           </h1>
           <p className={styles.heroSub}>Software Lead · Fullstack Engineer · Manaus, BR</p>
           <div className={styles.roles}>
