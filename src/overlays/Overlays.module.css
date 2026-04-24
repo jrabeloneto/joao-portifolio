@@ -116,12 +116,25 @@
   animation: letter-drift 5.2s ease-in-out infinite;
   will-change: transform;
 }
+/* Used in section h2 titles — gentler drift than hero */
+.driftLetter {
+  display: inline-block;
+  animation: letter-drift-subtle 6.5s ease-in-out infinite;
+  will-change: transform;
+}
 @keyframes letter-drift {
   0%   { transform: translateY(0) rotate(0deg); }
   20%  { transform: translateY(-0.06em) rotate(-0.8deg); }
   40%  { transform: translateY(0.04em) rotate(0.5deg); }
   60%  { transform: translateY(-0.08em) rotate(-0.3deg); }
   80%  { transform: translateY(0.03em) rotate(0.6deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+@keyframes letter-drift-subtle {
+  0%   { transform: translateY(0) rotate(0deg); }
+  25%  { transform: translateY(-0.05em) rotate(-0.5deg); }
+  50%  { transform: translateY(-0.09em) rotate(0.4deg); }
+  75%  { transform: translateY(-0.03em) rotate(-0.3deg); }
   100% { transform: translateY(0) rotate(0deg); }
 }
 
@@ -459,16 +472,22 @@
 /* ------------- CONTACT TERMINAL ------------- */
 
 .contactTerminal {
-  margin-top: 1rem;
-  width: min(640px, 90vw);
+  /* positioned to overlay the 3D monitor (centered, slightly above middle) */
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -46%);
+  width: min(520px, 42vw);
   background: #0a0c14;
   border: 1px solid color-mix(in srgb, #ffe5a8 25%, transparent);
-  border-radius: 6px;
+  border-radius: 4px;
   overflow: hidden;
   box-shadow:
     0 30px 80px rgba(0, 0, 0, 0.75),
-    0 0 40px color-mix(in srgb, #ffb060 40%, transparent);
+    0 0 40px color-mix(in srgb, #ffb060 40%, transparent),
+    inset 0 0 30px rgba(90, 160, 255, 0.08);
   font-family: 'IBM Plex Mono', monospace;
+  pointer-events: auto;
 }
 
 .terminalHeader {

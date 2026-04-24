@@ -20,6 +20,24 @@ function chapterStyle(op: number, extra: React.CSSProperties = {}): React.CSSPro
   return { opacity: op, ...extra };
 }
 
+/** Splits text into per-letter spans, each drifting with a staggered animation
+ * so section titles feel alive (letters floating in the dreamscape). */
+function Drift({ text, base = 0 }: { text: string; base?: number }) {
+  return (
+    <>
+      {Array.from(text).map((ch, i) => (
+        <span
+          key={i}
+          className={styles.driftLetter}
+          style={{ animationDelay: `${((i + base) % 10) * 0.13}s` }}
+        >
+          {ch === ' ' ? '\u00a0' : ch}
+        </span>
+      ))}
+    </>
+  );
+}
+
 const ROLES = ['React & Node', 'Three.js & 3D Web', 'Angular & Spring Boot', 'Design Systems'];
 
 export function Overlays() {
@@ -82,7 +100,10 @@ export function Overlays() {
       {/* ABOUT — professional, no company */}
       <section className={styles.layer} style={chapterStyle(aboutOp)}>
         <span className={styles.kicker}>// 01 — sobre</span>
-        <h2 className={styles.h2}>engenheiro<br />de <em>software</em></h2>
+        <h2 className={styles.h2}>
+          <Drift text="engenheiro" /><br />
+          <Drift text="de " base={3} /><em><Drift text="software" base={5} /></em>
+        </h2>
         <p className={styles.paragraph}>
           Atuo na interseção entre <strong>engenharia sólida</strong> e
           <em> design de interação</em>. Especialista em construir produtos
@@ -102,7 +123,10 @@ export function Overlays() {
       {/* APPROACH — new section, 4 pillars */}
       <section className={styles.layer} style={chapterStyle(approachOp)}>
         <span className={styles.kicker}>// 02 — princípios</span>
-        <h2 className={styles.h2}>código<br />com <em>intenção</em></h2>
+        <h2 className={styles.h2}>
+          <Drift text="código" /><br />
+          <Drift text="com " base={2} /><em><Drift text="intenção" base={4} /></em>
+        </h2>
         <div className={styles.pillars}>
           <div className={styles.pillar}>
             <span className={styles.pillarNum}>01</span>
@@ -130,7 +154,10 @@ export function Overlays() {
       {/* SKILLS — interactive constellation */}
       <section className={styles.layer} style={chapterStyle(skillsOp)}>
         <span className={styles.kicker}>// 03 — constelação de skills</span>
-        <h2 className={styles.h2}>{SKILLS.length} pontos<br /><em>navegáveis</em></h2>
+        <h2 className={styles.h2}>
+          <Drift text={`${SKILLS.length} pontos`} /><br />
+          <em><Drift text="navegáveis" base={3} /></em>
+        </h2>
         <p className={styles.skillHint}>
           mova o cursor sobre os pontos na constelação →
           <br />cada ponto é uma tecnologia
@@ -183,7 +210,10 @@ export function Overlays() {
       {/* EXPERIENCE */}
       <section className={styles.layer} style={chapterStyle(expOp)}>
         <span className={styles.kicker}>// 05 — trajetória</span>
-        <h2 className={styles.h2}>anos<br /><em>em luz</em></h2>
+        <h2 className={styles.h2}>
+          <Drift text="anos" /><br />
+          <em><Drift text="em luz" base={2} /></em>
+        </h2>
         <ul className={styles.timeline}>
           <li>
             <span className={styles.when}>2024 — presente</span>
@@ -211,7 +241,10 @@ export function Overlays() {
       {/* STORM — existential transition */}
       <section className={styles.layer} style={chapterStyle(stormOp)}>
         <span className={styles.kicker}>// 06 — tempestade</span>
-        <h2 className={styles.h2}>no olho<br /><em>do caos</em></h2>
+        <h2 className={styles.h2}>
+          <Drift text="no olho" /><br />
+          <em><Drift text="do caos" base={2} /></em>
+        </h2>
         <p className={styles.paragraph} style={{ maxWidth: '32ch' }}>
           Todo produto nasce no breu. Raios iluminam padrões que estavam ali o tempo todo —
           só esperando alguém com coragem de olhar.
@@ -224,7 +257,10 @@ export function Overlays() {
       {/* FIELD — descent */}
       <section className={styles.layer} style={chapterStyle(fieldOp)}>
         <span className={styles.kicker}>// 07 — descida</span>
-        <h2 className={styles.h2Light}>a casa<br /><em>na colina</em></h2>
+        <h2 className={styles.h2Light}>
+          <Drift text="a casa" /><br />
+          <em><Drift text="na colina" base={2} /></em>
+        </h2>
         <p className={styles.paragraphLight} style={{ maxWidth: '36ch' }}>
           Depois da tempestade, o campo. O horizonte azul. A casa onde as ideias viram código.
         </p>
@@ -233,7 +269,10 @@ export function Overlays() {
       {/* HOUSE / CONTACT */}
       <section className={styles.layer} style={chapterStyle(houseOp)}>
         <span className={styles.kicker}>// 08 — contato</span>
-        <h2 className={styles.h2}>vamos<br /><em>construir</em></h2>
+        <h2 className={styles.h2}>
+          <Drift text="vamos" /><br />
+          <em><Drift text="construir" base={2} /></em>
+        </h2>
         <div className={styles.contactTerminal}>
           <div className={styles.terminalHeader}>
             <span className={styles.terminalDot} style={{ background: '#ff5f56' }} />

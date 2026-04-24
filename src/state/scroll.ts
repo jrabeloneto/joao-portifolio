@@ -72,8 +72,8 @@ export const CAMERA_Z = [
   -340,   // projects mid/exit (long range!)
   -400,   // experience
   -450,   // storm
-  -510,   // field descent
-  -560,   // house/contact
+  -510,   // field descent (approaching house exterior)
+  -552,   // inside the house, sitting at the desk in front of monitor
 ];
 
 export function cameraZAt(p: number) {
