@@ -690,9 +690,9 @@ const moonFrag = /* glsl */ `
     if (uMouseInside > 0.5) {
       shadow = 1.0 - smoothstep(0.08, 0.0, mDist) * 0.55;
     }
-    vec3 haloCol = vec3(0.95, 0.93, 0.82) * halo * shadow;
-    vec3 col = moonColor * core + haloCol;
-    float alpha = (core + halo * 0.7) * uOpacity;
+    vec3 haloCol = vec3(1.4, 1.35, 1.1) * halo * shadow;
+    vec3 col = moonColor * core * 1.6 + haloCol;
+    float alpha = min(1.0, (core + halo * 0.85)) * uOpacity;
     gl_FragColor = vec4(col, alpha);
   }
 `;
@@ -746,6 +746,7 @@ function StormMoon() {
           transparent
           depthWrite={false}
           depthTest={false}
+          toneMapped={false}
           blending={THREE.NormalBlending}
         />
       </mesh>
@@ -778,6 +779,7 @@ function StormMoon() {
           transparent
           depthWrite={false}
           depthTest={false}
+          toneMapped={false}
           blending={THREE.AdditiveBlending}
         />
       </mesh>
@@ -1142,7 +1144,20 @@ function CameraRig() {
   const lookVec = useMemo(() => new THREE.Vector3(), []);
   useFrame((_, dt) => {
     const p = scrollState.progress;
-    const targetZ = cameraZAt(p);
+    let targetZ = cameraZAt(p);
+
+    // HOUSE ENTRY — once field chapter ends, dolly the camera into the room
+    // quickly so the interior (walls/desk/monitor) is visible before the
+    // terminal overlay appears. Room front wall is at world z=-560, desk at
+    // z≈-568. Without this override, CAMERA_Z lerps linearly from -520 to
+    // -568 over [0.9, 1.0], which keeps the camera outside the room until
+    // p≈0.983 (too late — user sees overlay with no room behind it).
+    if (p >= CH.field[1]) {
+      const t = Math.min(1, (p - CH.field[1]) / (1 - CH.field[1])); // 0..1 over [0.93, 1.00]
+      const entryT = Math.min(1, t / 0.43); // reach front-of-room at t≈0.43 (p≈0.96)
+      const settleT = Math.max(0, (t - 0.43) / 0.57);
+      targetZ = -520 + entryT * -40 + settleT * -8; // -520 → -560 → -568
+    }
 
     const baseX = scrollState.mouseX * 0.5;
     const baseY = 0.3 + scrollState.mouseY * 0.25;
