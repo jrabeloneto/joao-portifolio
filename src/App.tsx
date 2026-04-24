@@ -26,8 +26,8 @@ export default function App() {
         <DreamCanvas />
       </Suspense>
       <Overlays />
-      {/* virtual scroll spacer — provides scrollable height that maps to progress 0..1 */}
-      <div aria-hidden style={{ height: '600vh', width: '100%', pointerEvents: 'none' }} />
+      {/* virtual scroll spacer — 1000vh for 9-chapter journey */}
+      <div aria-hidden style={{ height: '1000vh', width: '100%', pointerEvents: 'none' }} />
     </>
   );
 }
