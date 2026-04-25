@@ -699,86 +699,72 @@ const moonFrag = /* glsl */ `
 
 function StormMoon() {
   const group = useRef<THREE.Group>(null!);
-  const uniforms = useMemo(() => ({
-    uTime: { value: 0 },
-    uOpacity: { value: 0 },
-    uMouse: { value: new THREE.Vector2(0.5, 0.5) },
-    uMouseInside: { value: 0 },
-  }), []);
+  const diskMat = useRef<THREE.MeshBasicMaterial>(null!);
+  const haloMat = useRef<THREE.MeshBasicMaterial>(null!);
+  const haloOuterMat = useRef<THREE.MeshBasicMaterial>(null!);
+  const haloRef = useRef<THREE.Mesh>(null!);
 
-  useFrame((state, dt) => {
-    uniforms.uTime.value += dt;
+  useFrame((state) => {
     const p = scrollState.progress;
     const op = envelope(p, CH.storm[0], CH.storm[1], 0.03);
-    uniforms.uOpacity.value = op;
-    if (group.current) group.current.visible = op > 0.01;
+    if (group.current) group.current.visible = op > 0.005;
+    if (diskMat.current) diskMat.current.opacity = op;
+    if (haloMat.current) haloMat.current.opacity = op * 0.85;
+    if (haloOuterMat.current) haloOuterMat.current.opacity = op * 0.45;
 
     const cam = state.camera as THREE.PerspectiveCamera;
-    // MOON FOLLOWS CAMERA — always 20 units ahead so it's never behind the
-    // camera regardless of where we are inside the storm scroll range.
-    const moonX = 0;
-    const moonY = 3.2;
-    const moonWorldZ = cam.position.z - 20;
-    const moonSize = 13;
-    if (group.current) group.current.position.set(moonX, moonY, moonWorldZ);
-    const vec = new THREE.Vector3(scrollState.mouseX, scrollState.mouseY, 0.5).unproject(cam);
-    const dir = vec.sub(cam.position).normalize();
-    if (Math.abs(dir.z) > 0.001) {
-      const t = (moonWorldZ - cam.position.z) / dir.z;
-      const worldHitX = cam.position.x + dir.x * t;
-      const worldHitY = cam.position.y + dir.y * t;
-      const localU = (worldHitX - moonX) / moonSize + 0.5;
-      const localV = (worldHitY - moonY) / moonSize + 0.5;
-      uniforms.uMouse.value.set(localU, localV);
-      const inside = localU > -0.3 && localU < 1.3 && localV > -0.3 && localV < 1.3 ? 1 : 0;
-      uniforms.uMouseInside.value += (inside - uniforms.uMouseInside.value) * Math.min(dt * 8, 1);
+    // Moon follows the camera so it's always 18 units ahead, framed in the sky
+    // above the cloud horizon. It's a solid bright disk with two additive
+    // glow rings — guaranteed visible regardless of post-processing.
+    if (group.current) {
+      group.current.position.set(0, cam.position.y + 4.5, cam.position.z - 18);
+      // Pulse the halo a touch from cursor proximity
+      const dx = scrollState.mouseX;
+      const dy = scrollState.mouseY - 0.3;
+      const prox = 1 - Math.min(1, Math.sqrt(dx * dx + dy * dy));
+      if (haloRef.current) {
+        const s = 1 + prox * 0.18;
+        haloRef.current.scale.set(s, s, 1);
+      }
     }
   });
 
   return (
-    <group ref={group} position={[0, 3.2, -462]} renderOrder={999}>
-      <mesh renderOrder={999}>
-        <planeGeometry args={[13, 13]} />
-        <shaderMaterial
-          uniforms={uniforms}
-          vertexShader={cloudVert}
-          fragmentShader={moonFrag}
+    <group ref={group} position={[0, 4.5, -462]} renderOrder={999}>
+      {/* Bright moon disk — flat circle, always rendered on top */}
+      <mesh renderOrder={1001}>
+        <circleGeometry args={[3.2, 64]} />
+        <meshBasicMaterial
+          ref={diskMat}
+          color="#fff5d8"
           transparent
-          depthWrite={false}
           depthTest={false}
+          depthWrite={false}
           toneMapped={false}
-          blending={THREE.NormalBlending}
         />
       </mesh>
-      {/* Additive glow halo — bigger, softer, also reacts via same uniforms */}
-      <mesh position={[0, 0, -0.1]} renderOrder={998}>
-        <planeGeometry args={[26, 26]} />
-        <shaderMaterial
-          uniforms={uniforms}
-          vertexShader={cloudVert}
-          fragmentShader={`
-            uniform float uOpacity;
-            uniform vec2 uMouse;
-            uniform float uMouseInside;
-            uniform float uTime;
-            varying vec2 vUv;
-            void main(){
-              vec2 c = vUv - 0.5;
-              float d = length(c);
-              float halo = smoothstep(0.5, 0.08, d);
-              // cursor-reactive distortion
-              vec2 mo = vUv - uMouse;
-              float md = length(mo);
-              float push = uMouseInside * exp(-md * 3.0) * (0.5 + 0.5 * sin(uTime * 3.0 - md * 18.0));
-              halo *= 1.0 + push * 0.8;
-              halo *= 1.0 - uMouseInside * smoothstep(0.15, 0.0, md) * 0.6;
-              vec3 col = vec3(0.95, 0.90, 0.75) * halo;
-              gl_FragColor = vec4(col, halo * uOpacity * 0.7);
-            }
-          `}
+      {/* Inner additive halo */}
+      <mesh ref={haloRef} position={[0, 0, -0.05]} renderOrder={1000}>
+        <circleGeometry args={[6.5, 64]} />
+        <meshBasicMaterial
+          ref={haloMat}
+          color="#ffe9b4"
           transparent
-          depthWrite={false}
           depthTest={false}
+          depthWrite={false}
+          toneMapped={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+      {/* Outer soft halo */}
+      <mesh position={[0, 0, -0.1]} renderOrder={999}>
+        <circleGeometry args={[12, 64]} />
+        <meshBasicMaterial
+          ref={haloOuterMat}
+          color="#9ab8ff"
+          transparent
+          depthTest={false}
+          depthWrite={false}
           toneMapped={false}
           blending={THREE.AdditiveBlending}
         />
@@ -964,8 +950,8 @@ function Hill() {
   return (
     <mesh
       ref={ref}
-      position={[0, -1.5, -553]}
-      scale={[16, 3.0, 14]}
+      position={[0, -1.6, -553]}
+      scale={[10, 1.6, 9]}
     >
       <sphereGeometry args={[1, 48, 20, 0, Math.PI * 2, 0, Math.PI * 0.5]} />
       <meshStandardMaterial color="#3e6e22" roughness={1} transparent />
@@ -1013,9 +999,10 @@ function FieldClouds() {
 function HouseInterior() {
   const ref = useRef<THREE.Group>(null!);
   useFrame(() => {
-    // Fade the interior in during late-field so the transition is continuous
-    // with the exterior fade-out: by p≈0.93 the interior is already present.
-    const op = envelope(scrollState.progress, CH.field[1] - 0.03, CH.house[1] + 0.01, 0.025);
+    // Only fade in once the camera is actually entering the house — earlier
+    // and the interior walls/desk show through the field sky behind the
+    // house, looking like a brown billboard floating behind the house roof.
+    const op = envelope(scrollState.progress, CH.house[0] + 0.005, CH.house[1] + 0.01, 0.012);
     if (!ref.current) return;
     ref.current.visible = op > 0.01;
     ref.current.traverse((o) => {
@@ -1096,19 +1083,19 @@ function HouseInterior() {
         <meshStandardMaterial color="#0a0a0a" roughness={0.6} metalness={0.3} transparent />
       </mesh>
       {/* monitor bezel — mounted on BACK WALL (z=-9.85) */}
-      <mesh position={[0, 2.85, -9.85]}>
-        <boxGeometry args={[6.8, 3.9, 0.16]} />
+      <mesh position={[0, 2.7, -9.85]}>
+        <boxGeometry args={[4.4, 2.7, 0.16]} />
         <meshStandardMaterial color="#050505" roughness={0.5} metalness={0.4} transparent />
       </mesh>
       {/* monitor screen — HTML terminal overlay sits on top of this in screen space */}
-      <mesh position={[0, 2.85, -9.77]}>
-        <planeGeometry args={[6.2, 3.4]} />
+      <mesh position={[0, 2.7, -9.77]}>
+        <planeGeometry args={[4.0, 2.3]} />
         <meshBasicMaterial color="#0a1220" transparent toneMapped={false} />
       </mesh>
       {/* screen bloom halo */}
-      <mesh position={[0, 2.85, -9.76]}>
-        <planeGeometry args={[8.2, 5.2]} />
-        <meshBasicMaterial color="#6aa8ff" transparent opacity={0.18} blending={THREE.AdditiveBlending} depthWrite={false} />
+      <mesh position={[0, 2.7, -9.76]}>
+        <planeGeometry args={[5.2, 3.4]} />
+        <meshBasicMaterial color="#6aa8ff" transparent opacity={0.14} blending={THREE.AdditiveBlending} depthWrite={false} />
       </mesh>
       {/* desk lamp bulb — warm glowing orb */}
       <mesh position={[4.0, 1.6, -8.2]}>
@@ -1129,7 +1116,7 @@ function HouseInterior() {
       <pointLight position={[-5, 4.5, 3]} intensity={3.0} color="#ffa858" distance={28} decay={1.2} />
       <pointLight position={[5, 4.5, 3]} intensity={2.2} color="#ffb070" distance={26} decay={1.2} />
       <pointLight position={[4.0, 2.0, -8.2]} intensity={1.8} color="#ffcc80" distance={10} decay={1.4} />
-      <pointLight position={[0, 2.85, -7.5]} intensity={1.2} color="#6aa8ff" distance={8} decay={1.4} />
+      <pointLight position={[0, 2.7, -7.5]} intensity={1.2} color="#6aa8ff" distance={8} decay={1.4} />
     </group>
   );
 }
@@ -1182,11 +1169,11 @@ function CameraRig() {
       targetLookY = lookStart + (lookEnd - lookStart) * ease;
     }
 
-    // HOUSE: seated at desk in front of monitor. Eye-level y≈2.85 so the
-    // camera looks dead-center at the monitor (y=2.85 in HouseInterior).
+    // HOUSE: seated at desk in front of monitor. Eye-level y≈2.7 so the
+    // camera looks dead-center at the monitor (y=2.7 in HouseInterior).
     if (p >= CH.house[0]) {
-      targetY = 2.85 + scrollState.mouseY * 0.06;
-      targetLookY = 2.85 + scrollState.mouseY * 0.04;
+      targetY = 2.7 + scrollState.mouseY * 0.06;
+      targetLookY = 2.7 + scrollState.mouseY * 0.04;
     }
 
     const targetRotZ = Math.sin(p * Math.PI * 2) * 0.04 + scrollState.mouseX * 0.04;
@@ -1305,7 +1292,7 @@ export function DreamCanvas() {
       <EffectComposer>
         <Bloom intensity={0.9} luminanceThreshold={0.35} luminanceSmoothing={0.4} mipmapBlur />
         <ChromaticAberration offset={[0.0008, 0.0012]} blendFunction={BlendFunction.NORMAL} radialModulation={false} modulationOffset={0} />
-        <Vignette eskil={false} offset={0.15} darkness={0.85} />
+        <Vignette eskil={false} offset={0.35} darkness={0.4} />
       </EffectComposer>
     </Canvas>
   );
