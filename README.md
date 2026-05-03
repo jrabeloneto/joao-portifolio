@@ -1,70 +1,56 @@
-# João Rabelo — Portfólio v2
+# JOÃO RABELO — Portfolio
 
-Portfolio pessoal com estética **Dark Dreamcore Cinematográfico**. Single-page React 19 + Vite 6, animações GSAP + Lenis, cena 3D Three.js no hero.
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/jrabeloneto/)
+[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/jrabeloneto)
+[![Portfolio](https://img.shields.io/badge/Live_Portfolio-000000?style=for-the-badge&logo=vercel&logoColor=white)](https://joao-portifolio.vercel.app)
 
-🔗 **Live:** deploy automático no Vercel (branch `main`)
+Portfolio cinematográfico de João Rabelo — engenheiro full-stack com foco em experiências WebGL/3D, arquiteturas robustas e produtos polidos do shader ao backend.
 
-## Stack
+## 🚀 Overview
 
-| Camada | Tech |
-|---|---|
-| Build | Vite 6 + React 19 + TypeScript |
-| Animações | GSAP 3.13 + ScrollTrigger + Lenis (smooth scroll) |
-| 3D | Three.js + @react-three/fiber + @react-three/drei |
-| Estilo | CSS Modules + CSS Custom Properties (sem Tailwind) |
-| Ícones | Lucide React |
-| Screenshots | Playwright (dev-only) |
+Aplicação React moderna, scroll-driven, com animações cinematográficas, componentes interativos e estética modernista "Deep Dark".
 
-## Desenvolvimento
+### Key Features
+- Cursor splash, vector bridge e micro-interações fluidas
+- Scroll stack customizado para projetos selecionados
+- Parallax storytelling e revelações por scroll
+- Layout 100% responsivo
+- Smooth scroll via Lenis
+
+---
+
+## 🛠️ Technology Stack
+
+| Layer | Technologies |
+| :--- | :--- |
+| **Frontend** | React 18, TypeScript, Vite |
+| **Styling** | Tailwind CSS, shadcn/ui, Radix UI |
+| **Animation** | Framer Motion, GSAP |
+| **Scrolling** | Lenis, ScrollVelocity |
+| **Validation** | Zod, React Hook Form |
+| **Icons** | Lucide React |
+
+---
+
+## 🛠️ Getting Started
 
 ```bash
+git clone https://github.com/jrabeloneto/joao-portifolio.git
+cd joao-portifolio
 npm install
-npm run dev          # http://localhost:5173
+npm run dev
 ```
 
-## Build
+---
 
-```bash
-npm run build
-npm run preview      # http://localhost:4173
-```
+## 📬 Contact
 
-## Gerar screenshots dos projetos (uma vez só)
+- **Email**: [jrabeloneto2@gmail.com](mailto:jrabeloneto2@gmail.com)
+- **LinkedIn**: [jrabeloneto](https://www.linkedin.com/in/jrabeloneto/)
+- **GitHub**: [jrabeloneto](https://github.com/jrabeloneto)
 
-```bash
-npx playwright install chromium
-node scripts/capture-screenshots.mjs
-```
+---
 
-Os arquivos vão pra `public/assets/projects/<slug>.jpg`.
-
-## Estrutura
-
-```
-src/
-├── components/
-│   ├── ui/            # Cursor, LoadingScreen, Navbar, GrainOverlay
-│   ├── sections/      # Hero, About, Projects, Skills, Experience, Contact
-│   └── three/         # HeroScene (partículas R3F)
-├── hooks/             # useLenis, useGSAP, useCursor
-├── styles/            # globals, typography, animations
-├── data/              # projects.ts
-└── App.tsx
-```
-
-## Deploy
-
-Vercel detecta automaticamente o push em `main` e deploya. Config em `vercel.json`.
-
-## Seções
-
-1. **Hero** — nome gigante + partículas 3D + roles rotativos
-2. **Sobre** — editorial com countup de stats e parallax
-3. **Projetos** — 8 projetos com hover reveal em camadas
-4. **Stack** — skills por categoria com glow em âmbar
-5. **Experiência** — timeline SVG que se desenha no scroll
-6. **Contato** — CTA + form via `mailto:` + links sociais
-
-## Licença
-
-MIT — João Rabelo © 2026
+<p align="center">
+  MADE BY JOÃO RABELO ® 2026
+</p>
