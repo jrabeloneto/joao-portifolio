@@ -15,10 +15,10 @@ const projects = [
   },
   {
     id: "002",
-    title: "Trend CRM/ERP — Operações em Tempo Real",
-    stack: "React / TypeScript / Node.js",
-    description: "CRM e ERP integrados com gestão de clientes, vendas e operações em tempo real. Dashboard analítico, fluxo de vendas e automações para o ecossistema Trend.",
-    links: { live: "https://trend-crm-erp.vercel.app/", code: "https://github.com/jrabeloneto/trend-crm-erp" },
+    title: "FarmáciaPRO — Gestão Farmacêutica",
+    stack: "React 19 / TypeScript / Zustand / Recharts / Vite",
+    description: "Sistema completo de gestão para farmácias: PDV, estoque, lotes e fornecedores, controlados, financeiro, fidelidade e 10 relatórios. 14 rotas funcionais.",
+    links: { live: "https://farmacia-pro-tau.vercel.app/", code: "https://github.com/jrabeloneto/farmacia-pro" },
     image: "/p2.png",
     cta: "Live Project"
   },
