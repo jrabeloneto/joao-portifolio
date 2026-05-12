@@ -24,10 +24,10 @@ const projects = [
   },
   {
     id: "003",
-    title: "TaskFlow — Kanban Fluído",
-    stack: "React 18 / TypeScript / Framer Motion / dnd-kit",
-    description: "Kanban board com drag & drop fluido, colunas dinâmicas e persistência local. Foco total em micro-interações, motion e produtividade real.",
-    links: { live: "https://taskflow-eight-blond.vercel.app/", code: "https://github.com/jrabeloneto/taskflow" },
+    title: "Capsule — Brand Site Cinematográfico",
+    stack: "React 19 / GSAP / Lenis / Tailwind v4",
+    description: "Landing imersiva com narrativa por scroll, animações encadeadas em GSAP, ScrollTrigger e SplitText. Galeria sticky, marquee reativo e UX cinematográfica em PT-BR.",
+    links: { live: "https://capsule-jade.vercel.app/", code: "https://github.com/jrabeloneto/capsule" },
     image: "/p3.png",
     cta: "Live Project"
   },
