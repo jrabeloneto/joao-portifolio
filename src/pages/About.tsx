@@ -104,13 +104,13 @@ const About = () => {
             </h3>
             <ul className="flex flex-col">
               <li className="font-sans text-xl md:text-2xl lg:text-3xl font-bold leading-tight tracking-tight">
-                Experiências Cinematográficas com WebGL & Three.js
-              </li>
-              <li className="font-sans text-xl md:text-2xl lg:text-3xl font-bold leading-tight tracking-tight">
-                Arquitetura Full-Stack (React, Node, Spring Boot)
+                Arquitetura Full-Stack & Liderança Técnica
               </li>
               <li className="font-sans text-xl md:text-2xl lg:text-3xl font-bold leading-tight tracking-tight">
                 Design de Produto, UX e Motion
+              </li>
+              <li className="font-sans text-xl md:text-2xl lg:text-3xl font-bold leading-tight tracking-tight">
+                Experiências Cinematográficas (WebGL & Three.js)
               </li>
             </ul>
           </motion.div>
