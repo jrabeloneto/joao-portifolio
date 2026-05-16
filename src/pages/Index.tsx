@@ -226,7 +226,7 @@ const Index = () => {
           >
             <div className="w-12 h-[2px] bg-white mb-6 md:hidden" />
             <p className="font-sans text-xs md:text-sm font-medium text-white leading-relaxed tracking-wide uppercase text-left">
-              Co-founder e gerente de desenvolvimento na AIKO. Lidero engenharia fullstack — React, Next.js, Node e Spring Boot — com diferencial em experiências WebGL e motion design.
+              Engenheiro full-stack focado em construir produtos cinematográficos com React, Three.js e arquiteturas robustas — do shader ao backend.
             </p>
           </motion.div>
         </div>

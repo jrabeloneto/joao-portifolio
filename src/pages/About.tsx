@@ -60,10 +60,10 @@ const About = () => {
             </h3>
             <div className="flex flex-col">
               <p className="font-sans text-xl md:text-2xl lg:text-3xl font-bold leading-tight tracking-tight">
-                Bacharelado em Engenharia de Software
+                Engenharia de Software
               </p>
               <p className="font-sans text-xl md:text-2xl lg:text-3xl font-normal text-black/70 leading-tight tracking-tight">
-                Centro Universitário Fametro (CEUNI-FAMETRO) — 2024–2029 (em curso)
+                Formação contínua em arquitetura web, full-stack & 3D / WebGL
               </p>
             </div>
           </motion.div>
@@ -81,7 +81,7 @@ const About = () => {
                   AIKO
                 </p>
                 <p className="font-sans text-xl md:text-2xl lg:text-3xl font-normal text-black/70 leading-tight tracking-tight">
-                  Co-founder & Gerente de Desenvolvimento (2026 – Atual)
+                  Gerente de Desenvolvimento (2026 – Atual)
                 </p>
               </div>
 
@@ -91,17 +91,7 @@ const About = () => {
                   Trend Energy
                 </p>
                 <p className="font-sans text-xl md:text-2xl lg:text-3xl font-normal text-black/70 leading-tight tracking-tight">
-                  Dev Lead Front-End — CRM/ERP, Landing Pages & Soluções Web (2025 – 2026)
-                </p>
-              </div>
-
-              {/* Job 3 */}
-              <div>
-                <p className="font-sans text-xl md:text-2xl lg:text-3xl font-bold leading-tight tracking-tight">
-                  Ordem DeMolay — GCE-AM
-                </p>
-                <p className="font-sans text-xl md:text-2xl lg:text-3xl font-normal text-black/70 leading-tight tracking-tight">
-                  Mestre Conselheiro Estadual — Liderança de +1.000 jovens (2022 – 2023)
+                  Dev Lead Front-End — CRM/ERP, Landing Pages & Soluções Web
                 </p>
               </div>
             </div>
@@ -114,13 +104,13 @@ const About = () => {
             </h3>
             <ul className="flex flex-col">
               <li className="font-sans text-xl md:text-2xl lg:text-3xl font-bold leading-tight tracking-tight">
-                Liderança Técnica & Arquitetura de Software
+                Experiências Cinematográficas com WebGL & Three.js
               </li>
               <li className="font-sans text-xl md:text-2xl lg:text-3xl font-bold leading-tight tracking-tight">
-                Fullstack — React, Next.js, Node & Spring Boot
+                Arquitetura Full-Stack (React, Node, Spring Boot)
               </li>
               <li className="font-sans text-xl md:text-2xl lg:text-3xl font-bold leading-tight tracking-tight">
-                Experiências WebGL / 3D & Integração de IA
+                Design de Produto, UX e Motion
               </li>
             </ul>
           </motion.div>
