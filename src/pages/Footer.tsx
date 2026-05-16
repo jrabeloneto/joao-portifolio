@@ -53,10 +53,10 @@ const Footer = () => {
             João Rabelo Neto
           </p>
           <p className="font-sans text-xs md:text-sm font-medium uppercase tracking-wide leading-relaxed text-white/60">
-            Full Stack Engineer · WebGL / 3D
+            Co-founder & Software Lead Fullstack
           </p>
           <p className="font-sans text-xs md:text-sm font-medium uppercase tracking-wide leading-relaxed text-white/60">
-            Brasil [Lat: -23.5, Long: -46.6]
+            Manaus, AM — Brasil [Lat: -3.1, Long: -60.0]
           </p>
         </motion.div>
 
