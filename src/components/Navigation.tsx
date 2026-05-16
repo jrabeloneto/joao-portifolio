@@ -166,6 +166,20 @@ const Navigation = () => {
                   {item.label}
                 </motion.a>
               ))}
+              <motion.a
+                href="/CV_Joao_Rabelo_2026.pdf"
+                download
+                target="_blank"
+                rel="noopener noreferrer"
+                custom={socialItems.length}
+                variants={socialVariants}
+                initial="closed"
+                animate="open"
+                exit="closed"
+                className="text-base md:text-lg font-medium text-white border border-white/40 rounded-full px-3 py-0.5 hover:bg-white hover:text-black transition-colors"
+              >
+                Download CV ↓
+              </motion.a>
             </div>
 
             {/* Nav Links */}
